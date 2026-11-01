@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>Result Details — HR Fram</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="app.css" rel="stylesheet"/>
+</head>
+<body>
+<header class="site-header"><div class="container nav"><a class="brand" href="index.html"><span class="brand-mark">H</span>HR Fram</a><nav class="nav-links"><a href="index.html">Home</a><a href="crop-recommendation.html">Crop Recommendation</a><a href="yield-prediction.html">Yield Prediction</a><a href="about-us.html">About Us</a><a href="history.html">History</a><a data-auth-user="" href="dashboard.html" style="display:none">Dashboard</a><a data-auth-admin="" href="admin.html" style="display:none">Admin Panel</a><a href="help.html">Help</a></nav><div class="nav-actions"><a class="btn btn-secondary" data-auth-guest="" href="login.html">Login</a><a class="btn btn-primary" data-auth-guest="" href="register.html">Get Started</a><button class="btn btn-secondary" data-auth-user="" onclick="HRFramAuth.logout()" style="display:none" type="button">Logout</button><button aria-label="Open menu" class="menu-btn" onclick="toggleAppMenu()" type="button">☰</button></div></div></header>
+<section class="page-intro">
+<div class="container">
+<div class="eyebrow"><span class="dot"></span> Result Details</div>
+<h1>HR Fram report.</h1>
+<p>
+      One report page is used for saved history, shareable results and printing.
+    </p>
+</div>
+</section>
+<main class="container" style="padding-bottom:70px">
+<article class="report" id="report">
+<div class="empty-state">Loading result...</div>
+</article>
+</main>
+<footer><div class="container footer-row"><span>© 2026 HR Fram. All Rights Reserved.</span><span>AI Agricultural Decision-Support Platform • <a href="help.html">Help</a> • <a href="privacy.html">Privacy</a> • <a href="terms.html">Terms</a></span></div></footer>
+<script>
+  const report =
+    document.getElementById("report");
+
+  const params =
+    new URLSearchParams(window.location.search);
+
+  function loadRecord(){
+    const sharedData =
+      params.get("data");
+
+    if(sharedData){
+      try{
+        return JSON.parse(sharedData);
+      }catch(error){
+        return null;
+      }
+    }
+
+    const id =
+      params.get("id");
+
+    if(id){
+      const history =
+        JSON.parse(localStorage.getItem("hrFramHistory") || "[]");
+
+      return history.find(function(item){
+        return item.id === id;
+      }) || null;
+    }
+
+    return null;
+  }
+
+  function valueOrDash(value, suffix){
+    if(
+      value === "" ||
+      value === null ||
+      value === undefined
+    ){
+      return "Not provided";
+    }
+
+    return String(value) + (suffix || "");
+  }
+
+  function renderYield(record){
+    const date =
+      new Date(record.createdAt).toLocaleString();
+
+    const management =
+      record.management || {};
+
+    const weather =
+      record.weather || {};
+
+    const soil =
+      record.soil || {};
+
+    report.innerHTML = `
+      <div class="report-head">
+        <div>
+          <span class="eyebrow"><span class="dot"></span>Yield Prediction</span>
+
+          <h1>${record.crop}</h1>
+
+          <p>
+            ${record.location.district},
+            ${record.location.province}
+            • ${date}
+          </p>
+        </div>
+
+        <span class="report-badge">DEMO REPORT</span>
+      </div>
+
+      <section class="report-section">
+        <h2>Crop, timing & farm information</h2>
+
+        <div class="detail-grid">
+          <div class="detail-item"><small>Province</small><strong>${record.location.province}</strong></div>
+          <div class="detail-item"><small>District / city</small><strong>${record.location.district}</strong></div>
+          <div class="detail-item"><small>Crop</small><strong>${record.crop}</strong></div>
+          <div class="detail-item"><small>Season</small><strong>${record.season || "Not provided"}</strong></div>
+          <div class="detail-item"><small>Sowing / planting date</small><strong>${record.sowingDate || "Not provided"}</strong></div>
+          <div class="detail-item"><small>Crop age</small><strong>${record.cropAgeDays === null || record.cropAgeDays === undefined ? "Not available" : record.cropAgeDays + " days"}</strong></div>
+          <div class="detail-item"><small>Growth stage</small><strong>${record.cropStage || "Not selected"}</strong></div>
+          <div class="detail-item"><small>Financial year</small><strong>${record.financialYear}</strong></div>
+          <div class="detail-item"><small>Farm area</small><strong>${record.farmArea} ${record.areaUnit}</strong></div>
+          <div class="detail-item"><small>Area in hectares</small><strong>${record.areaHectares} ha</strong></div>
+          <div class="detail-item"><small>Prediction source</small><strong>${record.source === "recommendation" ? "Crop Recommendation" : "Standalone"}</strong></div>
+          <div class="detail-item"><small>Weather mode</small><strong>${record.weatherMode === "auto" ? "Automatic" : "Manual"}</strong></div>
+        </div>
+      </section>
+
+      <section class="report-section">
+        <h2>Weather & soil context</h2>
+
+        <div class="detail-grid">
+          <div class="detail-item"><small>Temperature</small><strong>${valueOrDash(weather.temperature," °C")}</strong></div>
+          <div class="detail-item"><small>Humidity</small><strong>${valueOrDash(weather.humidity,"%")}</strong></div>
+          <div class="detail-item"><small>Rainfall / precipitation</small><strong>${valueOrDash(weather.rainfall," mm")}</strong></div>
+          <div class="detail-item"><small>Nitrogen (N)</small><strong>${valueOrDash(soil.nitrogen)}</strong></div>
+          <div class="detail-item"><small>Phosphorus (P)</small><strong>${valueOrDash(soil.phosphorus)}</strong></div>
+          <div class="detail-item"><small>Potassium (K)</small><strong>${valueOrDash(soil.potassium)}</strong></div>
+          <div class="detail-item"><small>Soil pH</small><strong>${valueOrDash(soil.ph)}</strong></div>
+        </div>
+      </section>
+
+      <section class="report-section">
+        <h2>Farm management context</h2>
+
+        <div class="detail-grid">
+          <div class="detail-item"><small>Irrigation / water source</small><strong>${management.irrigation || "Not provided"}</strong></div>
+          <div class="detail-item"><small>Fertilizer / nutrient input</small><strong>${management.fertilizerType || "Not provided"}</strong></div>
+          <div class="detail-item"><small>Fertilizer amount</small><strong>${management.fertilizerAmount ? management.fertilizerAmount + " kg/acre" : "Not provided"}</strong></div>
+          <div class="detail-item"><small>Seed / crop variety</small><strong>${management.seedVariety || "Not provided"}</strong></div>
+        </div>
+      </section>
+
+      <section class="report-section">
+        <h2>Prediction result</h2>
+
+        <div class="yield-result-main">
+          <div class="yield-result-box primary">
+            <small>Predicted yield</small>
+            <strong>${record.prediction.predictedYield} t/ha</strong>
+            <span>tonnes per hectare</span>
+          </div>
+
+          <div class="yield-result-box">
+            <small>Estimated production</small>
+            <strong>${record.prediction.estimatedProduction} t</strong>
+            <span>for the selected farm area</span>
+          </div>
+
+          <div class="yield-result-box">
+            <small>Expected range</small>
+            <strong>${record.prediction.lowerYield} – ${record.prediction.upperYield}</strong>
+            <span>demo uncertainty range</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="report-section">
+        <div class="result-summary">
+          <strong>Prediction summary</strong>
+
+          <p>
+            ${record.summary}
+            This remains a demo calculation until the trained model replaces it.
+          </p>
+        </div>
+      </section>
+
+      <div class="report-actions">
+        <a class="btn btn-secondary" href="history.html">
+          Back to History
+        </a>
+
+        <button
+          class="btn btn-primary"
+          type="button"
+          onclick="window.print()">
+          Print Report
+        </button>
+      </div>
+    `;
+
+    document.title =
+      record.crop + " Yield Prediction — HR Fram";
+  }
+
+  function renderRecommendation(record){
+    const date =
+      new Date(record.createdAt).toLocaleString();
+
+    const cropCards =
+      record.recommendations.map(function(crop,index){
+        return `
+          <div class="report-crop">
+            <span>${index === 0 ? "Best match" : "Alternative " + index}</span>
+            <h3>${crop.name}</h3>
+            <strong>${crop.score}% demo suitability</strong>
+
+            <p style="color:var(--muted);font-size:12px;line-height:1.5">
+              ${crop.reason}
+            </p>
+          </div>
+        `;
+      }).join("");
+
+    report.innerHTML = `
+      <div class="report-head">
+        <div>
+          <span class="eyebrow"><span class="dot"></span>${record.type}</span>
+
+          <h1>
+            ${record.location.district},
+            ${record.location.province}
+          </h1>
+
+          <p>Generated ${date}</p>
+        </div>
+
+        <span class="report-badge">DEMO REPORT</span>
+      </div>
+
+      <section class="report-section">
+        <h2>Farm & weather inputs</h2>
+
+        <div class="detail-grid">
+          <div class="detail-item"><small>Province</small><strong>${record.location.province}</strong></div>
+          <div class="detail-item"><small>District / city</small><strong>${record.location.district}</strong></div>
+          <div class="detail-item"><small>Season</small><strong>${record.season}</strong></div>
+          <div class="detail-item"><small>Farm area</small><strong>${valueOrDash(record.area,record.area ? " acres" : "")}</strong></div>
+          <div class="detail-item"><small>Planned sowing / planting date</small><strong>${record.plannedSowingDate || "Not provided"}</strong></div>
+          <div class="detail-item"><small>Weather mode</small><strong>${record.weatherMode === "auto" ? "Automatic" : "Manual"}</strong></div>
+          <div class="detail-item"><small>Temperature</small><strong>${valueOrDash(record.weather.temperature," °C")}</strong></div>
+          <div class="detail-item"><small>Humidity</small><strong>${valueOrDash(record.weather.humidity,"%")}</strong></div>
+          <div class="detail-item"><small>Rainfall / precipitation</small><strong>${valueOrDash(record.weather.rainfall," mm")}</strong></div>
+        </div>
+      </section>
+
+      <section class="report-section">
+        <h2>Optional soil inputs</h2>
+
+        <div class="detail-grid">
+          <div class="detail-item"><small>Nitrogen (N)</small><strong>${valueOrDash(record.soil.nitrogen)}</strong></div>
+          <div class="detail-item"><small>Phosphorus (P)</small><strong>${valueOrDash(record.soil.phosphorus)}</strong></div>
+          <div class="detail-item"><small>Potassium (K)</small><strong>${valueOrDash(record.soil.potassium)}</strong></div>
+          <div class="detail-item"><small>Soil pH</small><strong>${valueOrDash(record.soil.ph)}</strong></div>
+        </div>
+      </section>
+
+      <section class="report-section">
+        <h2>Recommended crops</h2>
+        <div class="report-crops">${cropCards}</div>
+      </section>
+
+      <section class="report-section">
+        <div class="result-summary">
+          <strong>Recommendation summary</strong>
+
+          <p>
+            ${record.summary}
+            These scores are demo values and will later be replaced by the trained model.
+          </p>
+        </div>
+      </section>
+
+      <div class="report-actions">
+        <a class="btn btn-secondary" href="history.html">
+          Back to History
+        </a>
+
+        <button
+          class="btn btn-primary"
+          type="button"
+          onclick="window.print()">
+          Print Report
+        </button>
+      </div>
+    `;
+
+    document.title =
+      record.location.district +
+      " Recommendation — HR Fram";
+  }
+
+  const record =
+    loadRecord();
+
+  if(!record){
+    report.innerHTML = `
+      <div class="empty-state">
+        Result not found.<br><br>
+
+        <a class="btn btn-primary" href="history.html">
+          Back to History
+        </a>
+      </div>
+    `;
+  }else if(record.type === "Yield Prediction"){
+    renderYield(record);
+  }else{
+    renderRecommendation(record);
+  }
+
+  if(record && params.get("print") === "1"){
+    setTimeout(function(){
+      window.print();
+    },350);
+  }
+</script>
+<script>
+function toggleAppMenu(){
+  const nav = document.querySelector(".nav-links");
+  if(nav){ nav.classList.toggle("mobile-open"); }
+}
+</script>
+<script src="auth.js"></script></body>
+</html>

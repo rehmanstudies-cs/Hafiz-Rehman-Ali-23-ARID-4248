@@ -1,0 +1,1205 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>Yield Prediction — HR Fram</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="app.css" rel="stylesheet"/>
+</head>
+<body>
+<header class="site-header"><div class="container nav"><a class="brand" href="index.html"><span class="brand-mark">H</span>HR Fram</a><nav class="nav-links"><a href="index.html">Home</a><a href="crop-recommendation.html">Crop Recommendation</a><a class="active" href="yield-prediction.html">Yield Prediction</a><a href="about-us.html">About Us</a><a href="history.html">History</a><a data-auth-user="" href="dashboard.html" style="display:none">Dashboard</a><a data-auth-admin="" href="admin.html" style="display:none">Admin Panel</a><a href="help.html">Help</a></nav><div class="nav-actions"><a class="btn btn-secondary" data-auth-guest="" href="login.html">Login</a><a class="btn btn-primary" data-auth-guest="" href="register.html">Get Started</a><button class="btn btn-secondary" data-auth-user="" onclick="HRFramAuth.logout()" style="display:none" type="button">Logout</button><button aria-label="Open menu" class="menu-btn" onclick="toggleAppMenu()" type="button">☰</button></div></div></header>
+<section class="page-intro">
+<div class="container">
+<div class="eyebrow"><span class="dot"></span> Yield Prediction</div>
+<h1>Predict yield using the farm context, not only the crop name.</h1>
+<p>
+      Start a new prediction or continue directly from Crop Recommendation.
+      Location, season, exact planting date, weather, soil, farm area and available management information can be kept together in one record.
+    </p>
+</div>
+</section>
+<main class="container page-grid">
+<section class="panel form-panel">
+<div class="section-title">
+<div>
+<h2>Prediction information</h2>
+<p>Use recommendation data or enter the farm information directly.</p>
+</div>
+<span class="step-badge">YIELD FORM</span>
+</div>
+<!-- SOURCE -->
+<div class="form-section">
+<h3>1. Start prediction</h3>
+<div class="source-switch">
+<button class="source-option active" id="newSourceButton" onclick="setSourceMode('new')" type="button">
+<strong>New Prediction</strong>
+<span>For a user who only wants to estimate yield.</span>
+</button>
+<button class="source-option" id="recommendationSourceButton" onclick="setSourceMode('recommendation')" type="button">
+<strong>Use Crop Recommendation Data</strong>
+<span>Reuse location, season, weather, soil and recommended crop.</span>
+</button>
+</div>
+<div class="carry-banner" id="carryBanner">
+<strong>Recommendation data loaded</strong>
+<span id="carryBannerText"></span>
+</div>
+<div class="saved-record-box" id="savedRecommendationBox">
+<label for="savedRecommendation">Saved crop recommendation</label>
+<select id="savedRecommendation" onchange="loadSavedRecommendation(this.value)">
+<option value="">Choose a saved recommendation</option>
+</select>
+<span class="field-note">
+          Account/database storage will replace browser storage later, but the user flow remains the same.
+        </span>
+</div>
+</div>
+<form id="yieldForm">
+<!-- LOCATION + CROP -->
+<div class="form-section">
+<h3>2. Location, crop &amp; timing</h3>
+<div class="form-grid">
+<div class="form-group">
+<label for="province">Province</label>
+<select id="province" required="">
+<option value="">Select province</option>
+<option>Punjab</option>
+<option>Sindh</option>
+<option>Khyber Pakhtunkhwa</option>
+<option>Balochistan</option>
+<option>Islamabad Capital Territory</option>
+<option>Gilgit-Baltistan</option>
+<option>Azad Jammu &amp; Kashmir</option>
+</select>
+</div>
+<div class="form-group">
+<label for="district">District / city</label>
+<input id="district" list="districtSuggestions" placeholder="Example: Sahiwal" required="" type="text"/>
+<datalist id="districtSuggestions">
+<option value="Sahiwal">
+<option value="Lahore">
+<option value="Faisalabad">
+<option value="Multan">
+<option value="Bahawalpur">
+<option value="Okara">
+<option value="Rawalpindi">
+<option value="Karachi">
+<option value="Hyderabad">
+<option value="Sukkur">
+<option value="Peshawar">
+<option value="Mardan">
+<option value="Abbottabad">
+<option value="Quetta">
+<option value="Khuzdar">
+</option></option></option></option></option></option></option></option></option></option></option></option></option></option></option></datalist>
+</div>
+<div class="form-group">
+<label for="crop">Crop</label>
+<input id="crop" list="cropSuggestions" placeholder="Example: Wheat" required="" type="text"/>
+<datalist id="cropSuggestions">
+<option value="Wheat">
+<option value="Rice">
+<option value="Maize">
+<option value="Cotton">
+<option value="Sugarcane">
+<option value="Gram">
+<option value="Mustard">
+<option value="Barley">
+<option value="Potato">
+<option value="Onion">
+</option></option></option></option></option></option></option></option></option></option></datalist>
+</div>
+<div class="form-group">
+<label for="season">Season</label>
+<select id="season" required="">
+<option value="">Select season</option>
+<option>Rabi</option>
+<option>Kharif</option>
+</select>
+</div>
+<div class="form-group">
+<label for="sowingDate">Sowing / planting date</label>
+<input id="sowingDate" required="" type="date"/>
+<span class="field-note">
+              Exact date is stored because a 15–30 day planting difference can matter when we engineer the final model features.
+            </span>
+</div>
+<div class="form-group">
+<label for="cropStage">Current crop stage</label>
+<select id="cropStage">
+<option value="">Not selected</option>
+<option>Sowing</option>
+<option>Initial</option>
+<option>Vegetative</option>
+<option>Peak Growth</option>
+<option>Reproductive</option>
+<option>Mature</option>
+<option>Harvested</option>
+</select>
+<span class="field-note">
+              These stage names follow the Pakistan ground-truth dataset you supplied.
+            </span>
+</div>
+<div class="form-group">
+<label for="financialYear">Target financial year</label>
+<select id="financialYear" required="">
+<option value="">Select financial year</option>
+<option>2024-25</option>
+<option>2025-26</option>
+<option selected="">2026-27</option>
+<option>2027-28</option>
+</select>
+</div>
+<div class="form-group">
+<label for="predictionDate">Prediction date</label>
+<input id="predictionDate" readonly="" type="date"/>
+</div>
+</div>
+</div>
+<!-- AREA -->
+<div class="form-section">
+<h3>3. Farm area</h3>
+<div class="form-grid">
+<div class="form-group">
+<label for="farmArea">Farm area</label>
+<input id="farmArea" min="0.1" placeholder="Example: 5" required="" step="0.1" type="number"/>
+</div>
+<div class="form-group">
+<label for="areaUnit">Area unit</label>
+<select id="areaUnit">
+<option selected="">Acres</option>
+<option>Hectares</option>
+</select>
+</div>
+</div>
+</div>
+<!-- WEATHER -->
+<div class="form-section">
+<h3>4. Weather information</h3>
+<div class="weather-box">
+<div class="weather-mode">
+<button class="mode-button active" id="autoModeButton" onclick="setWeatherMode('auto')" type="button">
+              Automatic Weather
+            </button>
+<button class="mode-button" id="manualModeButton" onclick="setWeatherMode('manual')" type="button">
+              Enter Manually
+            </button>
+</div>
+<div class="weather-status">
+<div>
+<strong id="weatherStatusTitle">Automatic mode selected</strong><br/>
+<span id="weatherStatusText">Choose a province and district, then fetch weather.</span>
+</div>
+<span>Open-Meteo</span>
+</div>
+<div class="form-grid">
+<div class="form-group">
+<label for="temperature">Temperature (°C)</label>
+<input id="temperature" placeholder="Automatic" readonly="" step="0.1" type="number"/>
+</div>
+<div class="form-group">
+<label for="humidity">Humidity (%)</label>
+<input id="humidity" max="100" min="0" placeholder="Automatic" readonly="" step="0.1" type="number"/>
+</div>
+<div class="form-group full">
+<label for="rainfall">Rainfall / precipitation (mm)</label>
+<input id="rainfall" min="0" placeholder="Automatic" readonly="" step="0.1" type="number"/>
+</div>
+</div>
+<div class="weather-controls" id="autoWeatherControls">
+<button class="small-button" onclick="fetchAutomaticWeather()" type="button">
+              Fetch / Refresh Weather
+            </button>
+</div>
+</div>
+</div>
+<!-- SOIL -->
+<div class="form-section">
+<h3>5. Soil information</h3>
+<div class="soil-grid">
+<div class="form-group">
+<label for="nitrogen">Nitrogen (N)</label>
+<input id="nitrogen" min="0" placeholder="N" type="number"/>
+</div>
+<div class="form-group">
+<label for="phosphorus">Phosphorus (P)</label>
+<input id="phosphorus" min="0" placeholder="P" type="number"/>
+</div>
+<div class="form-group">
+<label for="potassium">Potassium (K)</label>
+<input id="potassium" min="0" placeholder="K" type="number"/>
+</div>
+<div class="form-group">
+<label for="ph">Soil pH</label>
+<input id="ph" max="14" min="0" placeholder="pH" step="0.1" type="number"/>
+</div>
+</div>
+</div>
+<!-- MANAGEMENT -->
+<div class="form-section">
+<h3>6. Farm management information (optional)</h3>
+<div class="management-box">
+<div class="form-grid">
+<div class="form-group">
+<label for="irrigation">Irrigation / water source</label>
+<select id="irrigation">
+<option value="">Not selected</option>
+<option>Rainfed</option>
+<option>Canal</option>
+<option>Tube well</option>
+<option>Drip / sprinkler</option>
+<option>Mixed sources</option>
+<option>Other</option>
+</select>
+</div>
+<div class="form-group">
+<label for="fertilizerType">Fertilizer / nutrient input</label>
+<select id="fertilizerType">
+<option value="">Not selected</option>
+<option>None</option>
+<option>Urea</option>
+<option>DAP</option>
+<option>NPK blend</option>
+<option>Organic manure</option>
+<option>Multiple fertilizers</option>
+<option>Other</option>
+</select>
+</div>
+<div class="form-group">
+<label for="fertilizerAmount">Approx. fertilizer amount (kg/acre)</label>
+<input id="fertilizerAmount" min="0" placeholder="Optional" step="0.1" type="number"/>
+</div>
+<div class="form-group">
+<label for="seedVariety">Seed / crop variety</label>
+<input id="seedVariety" placeholder="Optional variety name" type="text"/>
+</div>
+</div>
+<div class="management-warning">
+            These management fields are useful and should be stored, but your current uploaded yield dataset does not contain irrigation, fertilizer amount/type or seed variety.
+            We should not claim that the trained yield model uses them until we obtain or collect matching training data.
+          </div>
+</div>
+</div>
+<div class="action-row">
+<button class="btn btn-primary" type="submit">
+          Predict Yield
+        </button>
+<button class="btn btn-secondary" onclick="resetYieldResult()" type="reset">
+          Clear Form
+        </button>
+</div>
+</form>
+<!-- RESULT -->
+<section class="result-section" id="resultSection">
+<div class="result-heading">
+<div>
+<span class="result-label">DEMO PREDICTION RESULT</span>
+<h2 id="predictionHeading">Yield prediction</h2>
+<p>The interface is model-ready; demo calculation is still used until the ML model is trained.</p>
+</div>
+<div class="result-location" id="resultLocation">Pakistan</div>
+</div>
+<div class="yield-result-main">
+<div class="yield-result-box primary">
+<small>Predicted yield</small>
+<strong id="predictedYield">—</strong>
+<span>tonnes per hectare</span>
+</div>
+<div class="yield-result-box">
+<small>Estimated production</small>
+<strong id="estimatedProduction">—</strong>
+<span>tonnes for this farm</span>
+</div>
+<div class="yield-result-box">
+<small>Expected range</small>
+<strong id="expectedRange">—</strong>
+<span>demo uncertainty range</span>
+</div>
+</div>
+<div class="context-grid">
+<div class="context-card">
+<small>Crop age</small>
+<strong id="cropAge">—</strong>
+</div>
+<div class="context-card">
+<small>Growth stage</small>
+<strong id="resultStage">—</strong>
+</div>
+<div class="context-card">
+<small>Weather source</small>
+<strong id="resultWeatherMode">—</strong>
+</div>
+<div class="context-card">
+<small>Input source</small>
+<strong id="resultSource">—</strong>
+</div>
+</div>
+<div class="yield-chart">
+<h3>Historical-style comparison</h3>
+<div class="bar-row">
+<span>Baseline</span>
+<div class="bar-track"><div class="bar-fill" id="baselineBar"></div></div>
+<strong id="baselineValue">—</strong>
+</div>
+<div class="bar-row">
+<span>Predicted</span>
+<div class="bar-track"><div class="bar-fill predicted" id="predictionBar"></div></div>
+<strong id="predictionValue">—</strong>
+</div>
+</div>
+<div class="result-summary">
+<strong>Prediction summary</strong>
+<p id="resultSummary"></p>
+</div>
+<div class="prediction-note">
+        The current demo calculation uses crop baseline, district and year only.
+        The extra weather, soil, sowing-date, stage and management values are stored in the result so the interface is ready for the richer trained model.
+      </div>
+<div class="result-actions">
+<button class="btn btn-primary" onclick="saveToHistory()" type="button">Save to History</button>
+<button class="btn btn-secondary" onclick="openDetails()" type="button">View Details</button>
+<button class="btn btn-secondary" onclick="prepareShareLink()" type="button">Share Result</button>
+<button class="btn btn-soft" onclick="printReport()" type="button">Print Report</button>
+</div>
+<div class="action-message" id="actionMessage"></div>
+<div class="share-box" id="shareBox">
+<label for="shareLink">Shareable result URL</label>
+<input id="shareLink" readonly="" type="text"/>
+</div>
+</section>
+</section>
+<aside class="panel side-panel">
+<div class="yield-hero-card">
+<small>PRACTICAL YIELD ESTIMATION</small>
+<strong>Location + timing + farm conditions + management context.</strong>
+</div>
+<div class="side-block">
+<h3>Why exact planting date matters</h3>
+<p>
+        Rabi/Kharif is useful, but it is broad. HR Fram now stores the exact sowing or planting date so the final model can engineer planting-time and crop-age features.
+      </p>
+</div>
+<div class="side-block">
+<h3>Connected workflow</h3>
+<div class="tip-list">
+<div class="tip"><span class="tip-icon">1</span><span>Crop Recommendation suggests a crop.</span></div>
+<div class="tip"><span class="tip-icon">2</span><span>User selects Predict Yield for Best Match.</span></div>
+<div class="tip"><span class="tip-icon">3</span><span>Location, weather, soil and farm area come across automatically.</span></div>
+<div class="tip"><span class="tip-icon">4</span><span>User completes timing/management details and predicts yield.</span></div>
+</div>
+</div>
+<div class="side-block">
+<div class="info-card">
+<strong>Standalone users still work normally</strong>
+<p>
+          A farmer can open Yield Prediction directly and enter the same information without first using Crop Recommendation.
+        </p>
+</div>
+</div>
+</aside>
+</main>
+<footer><div class="container footer-row"><span>© 2026 HR Fram. All Rights Reserved.</span><span>AI Agricultural Decision-Support Platform • <a href="help.html">Help</a> • <a href="privacy.html">Privacy</a> • <a href="terms.html">Terms</a></span></div></footer>
+<script>
+  let sourceMode = "new";
+  let weatherMode = "auto";
+  let currentResult = null;
+
+  const form = document.getElementById("yieldForm");
+  const resultSection = document.getElementById("resultSection");
+  const actionMessage = document.getElementById("actionMessage");
+  const shareBox = document.getElementById("shareBox");
+  const shareLink = document.getElementById("shareLink");
+
+  const demoYieldBaselines = {
+    "wheat":3.20,
+    "rice":4.10,
+    "maize":4.60,
+    "cotton":0.85,
+    "sugarcane":62.00,
+    "gram":1.15,
+    "mustard":1.35,
+    "barley":2.60,
+    "potato":21.50,
+    "onion":15.80
+  };
+
+  function setToday(){
+    const today = new Date();
+
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, "0");
+    const day = String(today.getDate()).padStart(2, "0");
+
+    document.getElementById("predictionDate").value =
+      year + "-" + month + "-" + day;
+  }
+
+  function setSourceMode(mode){
+    sourceMode = mode;
+
+    document.getElementById("newSourceButton")
+      .classList.toggle("active", mode === "new");
+
+    document.getElementById("recommendationSourceButton")
+      .classList.toggle("active", mode === "recommendation");
+
+    const savedBox = document.getElementById("savedRecommendationBox");
+    const carryBanner = document.getElementById("carryBanner");
+
+    if(mode === "recommendation"){
+      savedBox.style.display = "block";
+      populateSavedRecommendations();
+
+      const transfer = localStorage.getItem("hrFramYieldPrefill");
+
+      if(transfer){
+        try{
+          applyRecommendation(JSON.parse(transfer));
+        }catch(error){}
+      }
+    }else{
+      savedBox.style.display = "none";
+      carryBanner.style.display = "none";
+    }
+  }
+
+  function populateSavedRecommendations(){
+    const select = document.getElementById("savedRecommendation");
+
+    const history =
+      JSON.parse(localStorage.getItem("hrFramHistory") || "[]")
+      .filter(function(item){
+        return item.type === "Crop Recommendation";
+      });
+
+    select.innerHTML =
+      '<option value="">Choose a saved recommendation</option>' +
+      history.map(function(item){
+        const best =
+          item.recommendations && item.recommendations[0]
+            ? item.recommendations[0].name
+            : "Recommendation";
+
+        return `
+          <option value="${item.id}">
+            ${best} — ${item.location.district}, ${item.location.province}
+          </option>
+        `;
+      }).join("");
+  }
+
+  function loadSavedRecommendation(id){
+    if(!id) return;
+
+    const history =
+      JSON.parse(localStorage.getItem("hrFramHistory") || "[]");
+
+    const record =
+      history.find(function(item){
+        return item.id === id;
+      });
+
+    if(record){
+      applyRecommendation(record);
+    }
+  }
+
+  function applyRecommendation(record){
+    if(!record) return;
+
+    sourceMode = "recommendation";
+
+    const bestCrop =
+      record.recommendations && record.recommendations[0]
+        ? record.recommendations[0].name
+        : "";
+
+    document.getElementById("province").value =
+      record.location.province || "";
+
+    document.getElementById("district").value =
+      record.location.district || "";
+
+    document.getElementById("crop").value =
+      bestCrop;
+
+    document.getElementById("season").value =
+      record.season || "";
+
+    document.getElementById("farmArea").value =
+      record.area || "";
+
+    document.getElementById("areaUnit").value =
+      "Acres";
+
+    document.getElementById("sowingDate").value =
+      record.plannedSowingDate || "";
+
+    if(record.weather){
+      document.getElementById("temperature").value =
+        record.weather.temperature || "";
+
+      document.getElementById("humidity").value =
+        record.weather.humidity || "";
+
+      document.getElementById("rainfall").value =
+        record.weather.rainfall || "";
+    }
+
+    if(record.soil){
+      document.getElementById("nitrogen").value =
+        record.soil.nitrogen || "";
+
+      document.getElementById("phosphorus").value =
+        record.soil.phosphorus || "";
+
+      document.getElementById("potassium").value =
+        record.soil.potassium || "";
+
+      document.getElementById("ph").value =
+        record.soil.ph || "";
+    }
+
+    weatherMode =
+      record.weatherMode || "auto";
+
+    setWeatherMode(weatherMode);
+
+    document.getElementById("carryBanner").style.display =
+      "block";
+
+    document.getElementById("carryBannerText").textContent =
+      bestCrop +
+      " from " +
+      record.location.district +
+      " has been loaded with the recommendation's farm, weather and soil values.";
+
+    document.getElementById("newSourceButton")
+      .classList.remove("active");
+
+    document.getElementById("recommendationSourceButton")
+      .classList.add("active");
+
+    document.getElementById("savedRecommendationBox").style.display =
+      "block";
+  }
+
+  function setWeatherMode(mode){
+    weatherMode = mode;
+
+    const autoButton =
+      document.getElementById("autoModeButton");
+
+    const manualButton =
+      document.getElementById("manualModeButton");
+
+    const controls =
+      document.getElementById("autoWeatherControls");
+
+    const fields = [
+      document.getElementById("temperature"),
+      document.getElementById("humidity"),
+      document.getElementById("rainfall")
+    ];
+
+    if(mode === "auto"){
+      autoButton.classList.add("active");
+      manualButton.classList.remove("active");
+
+      fields.forEach(function(field){
+        field.readOnly = true;
+      });
+
+      controls.style.display = "flex";
+
+      setWeatherStatus(
+        "Automatic mode selected",
+        "Use the selected farm location to fetch weather.",
+        ""
+      );
+    }else{
+      manualButton.classList.add("active");
+      autoButton.classList.remove("active");
+
+      fields.forEach(function(field){
+        field.readOnly = false;
+      });
+
+      controls.style.display = "none";
+
+      setWeatherStatus(
+        "Manual mode selected",
+        "Enter the weather values yourself.",
+        ""
+      );
+    }
+  }
+
+  function setWeatherStatus(title,text,className){
+    document.getElementById("weatherStatusTitle").textContent =
+      title;
+
+    const textElement =
+      document.getElementById("weatherStatusText");
+
+    textElement.textContent = text;
+    textElement.className = className || "";
+  }
+
+  async function fetchAutomaticWeather(){
+    const province =
+      document.getElementById("province").value.trim();
+
+    const district =
+      document.getElementById("district").value.trim();
+
+    if(!province || !district){
+      setWeatherStatus(
+        "Location needed",
+        "Select a province and enter a district first.",
+        "status-error"
+      );
+
+      return;
+    }
+
+    setWeatherStatus(
+      "Finding location...",
+      "Searching Pakistan location data.",
+      ""
+    );
+
+    try{
+      const searchName =
+        encodeURIComponent(district);
+
+      const geocodeUrl =
+        "https://geocoding-api.open-meteo.com/v1/search?name=" +
+        searchName +
+        "&count=10&language=en&format=json&countryCode=PK";
+
+      const geocodeResponse =
+        await fetch(geocodeUrl);
+
+      const geocodeData =
+        await geocodeResponse.json();
+
+      if(
+        !geocodeData.results ||
+        geocodeData.results.length === 0
+      ){
+        throw new Error("Location not found");
+      }
+
+      let place =
+        geocodeData.results[0];
+
+      const provinceLower =
+        province.toLowerCase();
+
+      const closerMatch =
+        geocodeData.results.find(function(item){
+          const admin =
+            (item.admin1 || "").toLowerCase();
+
+          return (
+            admin.includes(provinceLower) ||
+            provinceLower.includes(admin)
+          );
+        });
+
+      if(closerMatch){
+        place = closerMatch;
+      }
+
+      const weatherUrl =
+        "https://api.open-meteo.com/v1/forecast" +
+        "?latitude=" + place.latitude +
+        "&longitude=" + place.longitude +
+        "&current=temperature_2m,relative_humidity_2m" +
+        "&daily=precipitation_sum" +
+        "&forecast_days=1" +
+        "&timezone=auto";
+
+      const weatherResponse =
+        await fetch(weatherUrl);
+
+      const weatherData =
+        await weatherResponse.json();
+
+      document.getElementById("temperature").value =
+        weatherData.current.temperature_2m ?? "";
+
+      document.getElementById("humidity").value =
+        weatherData.current.relative_humidity_2m ?? "";
+
+      document.getElementById("rainfall").value =
+        weatherData.daily.precipitation_sum[0] ?? "";
+
+      setWeatherStatus(
+        "Weather loaded",
+        "Current weather loaded for " + place.name + ".",
+        "status-ok"
+      );
+
+    }catch(error){
+      setWeatherStatus(
+        "Automatic weather unavailable",
+        "Try again or switch to manual weather entry.",
+        "status-error"
+      );
+    }
+  }
+
+  function simpleTextHash(text){
+    let total = 0;
+
+    for(let i = 0; i < text.length; i++){
+      total += text.charCodeAt(i) * (i + 1);
+    }
+
+    return total;
+  }
+
+  function getDemoPrediction(crop,district,financialYear){
+    const key =
+      crop.trim().toLowerCase();
+
+    const baseline =
+      demoYieldBaselines[key] || 2.50;
+
+    const districtAdjustment =
+      ((simpleTextHash(district.toLowerCase()) % 9) - 4) / 100;
+
+    const yearNumber =
+      parseInt(financialYear.slice(0,4),10) || 2026;
+
+    const yearAdjustment =
+      Math.max(
+        -0.05,
+        Math.min(
+          0.08,
+          (yearNumber - 2024) * 0.012
+        )
+      );
+
+    const predicted =
+      baseline *
+      (1 + districtAdjustment + yearAdjustment);
+
+    return {
+      baseline:Number(baseline.toFixed(2)),
+      predicted:Number(predicted.toFixed(2))
+    };
+  }
+
+  function convertAreaToHectares(area,unit){
+    return unit === "Acres"
+      ? area * 0.404686
+      : area;
+  }
+
+  function calculateCropAge(){
+    const sowingDate =
+      document.getElementById("sowingDate").value;
+
+    const predictionDate =
+      document.getElementById("predictionDate").value;
+
+    if(!sowingDate || !predictionDate){
+      return null;
+    }
+
+    const start =
+      new Date(sowingDate + "T00:00:00");
+
+    const end =
+      new Date(predictionDate + "T00:00:00");
+
+    const difference =
+      Math.floor(
+        (end - start) /
+        (1000 * 60 * 60 * 24)
+      );
+
+    return difference >= 0
+      ? difference
+      : null;
+  }
+
+  form.addEventListener("submit",async function(event){
+    event.preventDefault();
+
+    if(weatherMode === "auto"){
+      const temperature =
+        document.getElementById("temperature").value;
+
+      if(!temperature){
+        await fetchAutomaticWeather();
+      }
+    }
+
+    const province =
+      document.getElementById("province").value;
+
+    const district =
+      document.getElementById("district").value.trim();
+
+    const crop =
+      document.getElementById("crop").value.trim();
+
+    const season =
+      document.getElementById("season").value;
+
+    const sowingDate =
+      document.getElementById("sowingDate").value;
+
+    const cropStage =
+      document.getElementById("cropStage").value;
+
+    const financialYear =
+      document.getElementById("financialYear").value;
+
+    const farmArea =
+      Number(document.getElementById("farmArea").value);
+
+    const areaUnit =
+      document.getElementById("areaUnit").value;
+
+    const demo =
+      getDemoPrediction(
+        crop,
+        district,
+        financialYear
+      );
+
+    const areaHectares =
+      convertAreaToHectares(
+        farmArea,
+        areaUnit
+      );
+
+    const production =
+      demo.predicted *
+      areaHectares;
+
+    const lower =
+      demo.predicted * 0.92;
+
+    const upper =
+      demo.predicted * 1.08;
+
+    const cropAge =
+      calculateCropAge();
+
+    currentResult = {
+      id:"yield-" + Date.now(),
+      type:"Yield Prediction",
+      createdAt:new Date().toISOString(),
+
+      source:sourceMode,
+
+      location:{
+        province:province,
+        district:district
+      },
+
+      crop:crop,
+      season:season,
+      sowingDate:sowingDate,
+      predictionDate:
+        document.getElementById("predictionDate").value,
+
+      cropAgeDays:cropAge,
+      cropStage:cropStage,
+
+      financialYear:financialYear,
+
+      farmArea:farmArea,
+      areaUnit:areaUnit,
+      areaHectares:
+        Number(areaHectares.toFixed(3)),
+
+      weatherMode:weatherMode,
+
+      weather:{
+        temperature:
+          document.getElementById("temperature").value || "",
+
+        humidity:
+          document.getElementById("humidity").value || "",
+
+        rainfall:
+          document.getElementById("rainfall").value || ""
+      },
+
+      soil:{
+        nitrogen:
+          document.getElementById("nitrogen").value || "",
+
+        phosphorus:
+          document.getElementById("phosphorus").value || "",
+
+        potassium:
+          document.getElementById("potassium").value || "",
+
+        ph:
+          document.getElementById("ph").value || ""
+      },
+
+      management:{
+        irrigation:
+          document.getElementById("irrigation").value || "",
+
+        fertilizerType:
+          document.getElementById("fertilizerType").value || "",
+
+        fertilizerAmount:
+          document.getElementById("fertilizerAmount").value || "",
+
+        seedVariety:
+          document.getElementById("seedVariety").value || ""
+      },
+
+      prediction:{
+        baselineYield:demo.baseline,
+        predictedYield:demo.predicted,
+        estimatedProduction:
+          Number(production.toFixed(2)),
+        lowerYield:Number(lower.toFixed(2)),
+        upperYield:Number(upper.toFixed(2))
+      },
+
+      summary:
+        crop +
+        " is estimated at " +
+        demo.predicted.toFixed(2) +
+        " tonnes per hectare in the current interface demo."
+    };
+
+    document.getElementById("predictionHeading").textContent =
+      crop + " yield prediction";
+
+    document.getElementById("resultLocation").textContent =
+      district + ", " + province;
+
+    document.getElementById("predictedYield").textContent =
+      demo.predicted.toFixed(2) + " t/ha";
+
+    document.getElementById("estimatedProduction").textContent =
+      production.toFixed(2) + " t";
+
+    document.getElementById("expectedRange").textContent =
+      lower.toFixed(2) +
+      " – " +
+      upper.toFixed(2);
+
+    document.getElementById("cropAge").textContent =
+      cropAge === null
+        ? "Not available"
+        : cropAge + " days";
+
+    document.getElementById("resultStage").textContent =
+      cropStage || "Not selected";
+
+    document.getElementById("resultWeatherMode").textContent =
+      weatherMode === "auto"
+        ? "Automatic"
+        : "Manual";
+
+    document.getElementById("resultSource").textContent =
+      sourceMode === "recommendation"
+        ? "Crop Recommendation"
+        : "Standalone";
+
+    document.getElementById("baselineValue").textContent =
+      demo.baseline.toFixed(2);
+
+    document.getElementById("predictionValue").textContent =
+      demo.predicted.toFixed(2);
+
+    const chartMax =
+      Math.max(
+        demo.baseline,
+        demo.predicted
+      ) * 1.15;
+
+    document.getElementById("baselineBar").style.width =
+      Math.min(
+        100,
+        demo.baseline / chartMax * 100
+      ) + "%";
+
+    document.getElementById("predictionBar").style.width =
+      Math.min(
+        100,
+        demo.predicted / chartMax * 100
+      ) + "%";
+
+    document.getElementById("resultSummary").textContent =
+      currentResult.summary +
+      " For " +
+      farmArea +
+      " " +
+      areaUnit.toLowerCase() +
+      ", estimated production is " +
+      production.toFixed(2) +
+      " tonnes. All additional farm context has been stored with this result for the future trained model.";
+
+    resultSection.style.display =
+      "block";
+
+    actionMessage.style.display =
+      "none";
+
+    shareBox.style.display =
+      "none";
+
+    resultSection.scrollIntoView({
+      behavior:"smooth",
+      block:"start"
+    });
+  });
+
+  function resetYieldResult(){
+    resultSection.style.display =
+      "none";
+
+    currentResult = null;
+
+    setTimeout(function(){
+      setToday();
+      setSourceMode("new");
+      setWeatherMode("auto");
+    },0);
+  }
+
+  function saveToHistory(){
+    if(!currentResult) return;
+
+    const history =
+      JSON.parse(
+        localStorage.getItem("hrFramHistory") || "[]"
+      );
+
+    const alreadySaved =
+      history.some(function(item){
+        return item.id === currentResult.id;
+      });
+
+    if(!alreadySaved){
+      history.unshift(currentResult);
+
+      localStorage.setItem(
+        "hrFramHistory",
+        JSON.stringify(history)
+      );
+    }
+
+    showActionMessage(
+      "Yield prediction saved to History."
+    );
+  }
+
+  function detailUrl(record,useData){
+    const baseUrl =
+      new URL(
+        "result-detail.html",
+        window.location.href
+      );
+
+    if(useData){
+      baseUrl.searchParams.set(
+        "data",
+        JSON.stringify(record)
+      );
+    }else{
+      baseUrl.searchParams.set(
+        "id",
+        record.id
+      );
+    }
+
+    return baseUrl.toString();
+  }
+
+  function openDetails(){
+    if(!currentResult) return;
+
+    saveToHistory();
+
+    window.location.href =
+      detailUrl(currentResult,false);
+  }
+
+  async function prepareShareLink(){
+    if(!currentResult) return;
+
+    const url =
+      detailUrl(currentResult,true);
+
+    shareLink.value = url;
+    shareBox.style.display = "block";
+
+    try{
+      await navigator.clipboard.writeText(url);
+
+      showActionMessage(
+        "Share link copied. It is also shown below."
+      );
+    }catch(error){
+      showActionMessage(
+        "Share link is ready below. Copy it manually."
+      );
+    }
+
+    shareLink.select();
+  }
+
+  function printReport(){
+    if(!currentResult) return;
+
+    const url =
+      new URL(
+        detailUrl(currentResult,true)
+      );
+
+    url.searchParams.set(
+      "print",
+      "1"
+    );
+
+    window.open(
+      url.toString(),
+      "_blank"
+    );
+  }
+
+  function showActionMessage(text){
+    actionMessage.textContent = text;
+    actionMessage.style.display = "block";
+  }
+
+  setToday();
+  populateSavedRecommendations();
+
+  const params =
+    new URLSearchParams(window.location.search);
+
+  if(params.get("source") === "recommendation"){
+    setSourceMode("recommendation");
+  }else{
+    setSourceMode("new");
+  }
+</script>
+<script>
+function toggleAppMenu(){
+  const nav = document.querySelector(".nav-links");
+  if(nav){ nav.classList.toggle("mobile-open"); }
+}
+</script>
+<script src="auth.js"></script></body>
+</html>

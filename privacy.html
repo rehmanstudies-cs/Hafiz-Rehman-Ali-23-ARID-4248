@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>Privacy Policy — HR Fram</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="app.css" rel="stylesheet"/>
+<style>
+    .privacy-meta{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top:18px;
+    }
+    .privacy-meta span{
+      padding:7px 10px;
+      border-radius:999px;
+      background:#EAF3E8;
+      color:#1F5E3B;
+      font-size:10px;
+      font-weight:800;
+    }
+    .policy-intro{
+      font-size:14px!important;
+      line-height:1.85!important;
+    }
+    .legal-card .legal-section p{
+      margin:0 0 14px;
+    }
+    .legal-card .legal-section h3{
+      margin:18px 0 8px;
+      font-size:15px;
+    }
+    .legal-card .legal-section li{
+      margin-bottom:7px;
+    }
+    .policy-callout{
+      margin:16px 0;
+      padding:14px 16px;
+      border-left:4px solid #1F5E3B;
+      background:#F7FAF5;
+      color:#56645A;
+      font-size:11px;
+      line-height:1.7;
+      border-radius:0 10px 10px 0;
+    }
+  </style>
+</head>
+<body>
+<header class="site-header"><div class="container nav"><a class="brand" href="index.html"><span class="brand-mark">H</span>HR Fram</a><nav class="nav-links"><a href="index.html">Home</a><a href="crop-recommendation.html">Crop Recommendation</a><a href="yield-prediction.html">Yield Prediction</a><a href="about-us.html">About Us</a><a href="history.html">History</a><a data-auth-user="" href="dashboard.html" style="display:none">Dashboard</a><a data-auth-admin="" href="admin.html" style="display:none">Admin Panel</a><a href="help.html">Help</a></nav><div class="nav-actions"><a class="btn btn-secondary" data-auth-guest="" href="login.html">Login</a><a class="btn btn-primary" data-auth-guest="" href="register.html">Get Started</a><button class="btn btn-secondary" data-auth-user="" onclick="HRFramAuth.logout()" style="display:none" type="button">Logout</button><button aria-label="Open menu" class="menu-btn" onclick="toggleAppMenu()" type="button">☰</button></div></div></header>
+<main class="content-page">
+<div class="container">
+<section class="content-hero">
+<div class="eyebrow"><span class="dot"></span>Privacy Policy</div>
+<h1>How HR Fram handles information during the prototype stage.</h1>
+<p>
+        This Privacy Policy explains the types of information HR Fram may collect, process, store,
+        display, transfer, or otherwise use while providing its agricultural decision-support features.
+        It also explains the difference between the current front-end academic prototype and a future
+        production version that may use a database, backend server, authentication system, cloud hosting,
+        analytics, external APIs, and trained machine-learning models.
+      </p>
+<div class="privacy-meta">
+<span>Academic Prototype</span>
+<span>Last Updated: October 2026</span>
+<span>Pakistan-First Platform</span>
+</div>
+</section>
+<div class="prototype-notice">
+      Important prototype notice: HR Fram is currently being developed as a BSCS Final Year Project.
+      The present version uses browser-based storage for several functions and does not yet represent
+      a fully deployed commercial or production service. This policy is therefore intentionally written
+      to describe both the current prototype behavior and the expected privacy responsibilities of a future
+      backend-enabled version. It should be formally reviewed before public production deployment.
+    </div>
+<section class="legal-layout">
+<nav class="legal-nav">
+<a href="#scope">1. Scope</a>
+<a href="#information">2. Information We Handle</a>
+<a href="#agricultural">3. Agricultural Data</a>
+<a href="#usage">4. How Data Is Used</a>
+<a href="#browser">5. Browser Storage</a>
+<a href="#weather">6. Weather Services</a>
+<a href="#models">7. AI &amp; Models</a>
+<a href="#accounts">8. Accounts</a>
+<a href="#sharing">9. Sharing</a>
+<a href="#retention">10. Retention</a>
+<a href="#security">11. Security</a>
+<a href="#rights">12. User Choices</a>
+<a href="#children">13. Children</a>
+<a href="#changes">14. Changes</a>
+<a href="#contact">15. Contact</a>
+</nav>
+<article class="legal-card">
+<section class="legal-section" id="scope">
+<h2>1. Scope and purpose of this Privacy Policy</h2>
+<p class="policy-intro">
+            HR Fram is an AI-based agricultural decision-support platform being developed to help users make
+            more informed crop-selection and yield-planning decisions. The platform is designed around a
+            Pakistan-first workflow and may use location, weather information, soil information, crop data,
+            historical agricultural records, user-provided farm details, and machine-learning outputs to support
+            its core features. This Privacy Policy applies to the HR Fram website, its crop recommendation module,
+            yield prediction module, user dashboard, profile features, saved history, administrative interfaces,
+            support forms, and related functionality that may be added as the project develops.
+          </p>
+<p>
+            The purpose of this policy is to explain clearly what information may be involved when a user interacts
+            with HR Fram, how that information is used, how it is currently stored during the prototype stage,
+            when information may be sent to an external service, what choices users have, and how future versions
+            of the system should handle data responsibly. Because the project is still under development, some
+            parts of this policy describe intended production behavior rather than functionality that is already
+            implemented. Where that distinction matters, the policy identifies it.
+          </p>
+<p>
+            This document should be read together with the HR Fram Terms of Use. The Terms explain acceptable use,
+            the limitations of agricultural recommendations and predictions, and the fact that HR Fram is intended
+            to support decision-making rather than guarantee agricultural results. This Privacy Policy focuses
+            specifically on information handling and user privacy.
+          </p>
+</section>
+<section class="legal-section" id="information">
+<h2>2. Information HR Fram may handle</h2>
+<p>
+            HR Fram may handle information that users provide directly, information generated through their use
+            of the system, technical information required for specific functions, and information obtained from
+            external services such as weather-data providers. The exact categories depend on which part of the
+            system the user chooses to use.
+          </p>
+<h3>2.1 Profile and account information</h3>
+<p>
+            The user dashboard and account interfaces may handle a full name, username, email address, optional
+            phone number, province, district or city, default farm area, preferred land-area unit, and an optional
+            profile image. During the current front-end prototype, these values are used only to demonstrate the
+            account experience, personalize the dashboard, and support future form pre-filling. Real account
+            registration, identity verification, password hashing, secure session handling, and database-backed
+            account storage are planned for the backend stage.
+          </p>
+<h3>2.2 Authentication and recovery information</h3>
+<p>
+            The current test environment includes a dummy login account so the complete user flow can be tested.
+            A temporary browser-based reset token may also be created when testing the Forgot Password and Reset
+            Password pages. These mechanisms are not intended to represent production-grade authentication. In a
+            final deployment, passwords should never be stored in plain text, reset tokens should be generated and
+            validated securely on the server, and authentication records should be protected using appropriate
+            security controls.
+          </p>
+<h3>2.3 Support information</h3>
+<p>
+            If a user submits a Help or Support request, the system may handle the user's name, email address,
+            selected support category, subject, message, time of submission, and an automatically generated support
+            reference number. In the current prototype, support requests may be stored in the same browser rather
+            than transmitted to a help-desk server. A future production version may send these requests to a backend,
+            database, support system, or authorized project administrator.
+          </p>
+</section>
+<section class="legal-section" id="agricultural">
+<h2>3. Agricultural and farm-related information</h2>
+<p>
+            The core purpose of HR Fram requires the platform to work with agricultural context. Depending on the
+            module being used, a user may provide or generate information about province, district or city, season,
+            farm area, crop, sowing or planting date, growth stage, expected financial year, irrigation source,
+            fertilizer or nutrient input, approximate fertilizer quantity, seed or crop variety, and other
+            management-related details.
+          </p>
+<p>
+            Crop Recommendation may also use soil values such as Nitrogen (N), Phosphorus (P), Potassium (K), and
+            pH when those values are available. These inputs are optional in the current design because not every
+            farmer has access to a recent soil test. Weather-related information may include temperature, humidity,
+            rainfall or precipitation, and location information used to retrieve those values.
+          </p>
+<p>
+            Yield Prediction may additionally store predicted yield expressed in tonnes per hectare, estimated total
+            production for the selected farm area, a displayed uncertainty or range, crop age calculated from the
+            sowing date, model or demo-result metadata, and the source of the prediction workflow. For example, a
+            prediction may be started independently or may continue directly from a Crop Recommendation result.
+          </p>
+<div class="policy-callout">
+            Agricultural information entered into HR Fram should be treated as decision-support context. The system
+            should not automatically interpret user-entered information as independently verified farm records,
+            scientific measurements, legal land records, or certified agricultural data.
+          </div>
+</section>
+<section class="legal-section" id="usage">
+<h2>4. How HR Fram may use information</h2>
+<p>
+            HR Fram uses information primarily to provide the features the user requests. Profile information may be
+            used to personalize the dashboard and reduce repeated data entry. Farm and environmental information may
+            be used to prepare crop recommendation inputs, yield prediction inputs, saved result records, printable
+            reports, history entries, and summaries displayed to the user.
+          </p>
+<p>
+            Location information may be used to retrieve relevant weather conditions. Soil information may be used
+            as input to the crop recommendation model once the final trained model is connected. Historical yield
+            information may be used to train, validate, or support the yield prediction model. Information collected
+            through the administrative interface may be used to manage crop catalog entries, dataset metadata, model
+            status information, and project-level monitoring.
+          </p>
+<p>
+            During model-development work, data may also be used to evaluate whether the system is producing reasonable
+            and technically defensible results. This may include data cleaning, feature engineering, comparing model
+            predictions against known values, calculating performance metrics, detecting obvious input problems, and
+            reviewing how different inputs affect prediction behavior. If user-generated data is ever incorporated
+            into model training or evaluation in a future version, the project should clearly document that practice
+            before doing so rather than silently reusing personal or farm information.
+          </p>
+<p>
+            HR Fram should not use information for unrelated advertising, behavioral profiling, sale to data brokers,
+            or other purposes that are unrelated to the project without first updating the policy and, where
+            appropriate, obtaining meaningful user consent.
+          </p>
+</section>
+<section class="legal-section" id="browser">
+<h2>5. Browser storage in the current prototype</h2>
+<p>
+            The present front-end implementation uses browser localStorage for several functions. This may include
+            profile details, a test login session, the dummy account configuration, saved crop recommendation
+            records, saved yield prediction records, temporary recommendation-to-yield transfer data, password-reset
+            demo tokens, support requests, administrative crop records, administrative dataset metadata, and activity
+            logs created while testing the website.
+          </p>
+<p>
+            localStorage is specific to the browser and device being used. Information stored there does not
+            automatically synchronize across computers, phones, browsers, or private-browsing sessions. If a user
+            clears browser storage, uses a different browser, changes device, or uses certain privacy settings, that
+            information may no longer be available.
+          </p>
+<p>
+            Browser storage is useful for demonstrating the user experience before a backend exists, but it is not a
+            substitute for a secure production database. Sensitive production information should not be stored in
+            plain browser storage merely because it is convenient. When the backend is implemented, HR Fram should
+            move account authentication, server-managed sessions, secure password handling, user records, support
+            tickets, administrative permissions, and other appropriate data into controlled server-side systems.
+          </p>
+</section>
+<section class="legal-section" id="weather">
+<h2>6. Weather information and external services</h2>
+<p>
+            HR Fram is designed to reduce unnecessary manual input by retrieving weather information automatically
+            when the user selects an appropriate location. To perform this function, the application may send a
+            location name or geographic coordinates to an external weather or geocoding service. The service may
+            return values such as temperature, relative humidity, precipitation, latitude, longitude, administrative
+            area, and related weather metadata.
+          </p>
+<p>
+            When an external service is used, that provider operates under its own technical systems and privacy
+            practices. HR Fram cannot control the provider's infrastructure. Before final deployment, the project
+            should document the production weather provider being used, review the provider's applicable terms and
+            privacy information, and ensure that the integration sends only the information needed for the requested
+            function.
+          </p>
+<p>
+            The system should avoid sending unrelated profile information to a weather service. A weather request
+            generally needs location context, not a user's name, phone number, profile image, password, or complete
+            farm-management record. Maintaining that separation reduces unnecessary data exposure.
+          </p>
+</section>
+<section class="legal-section" id="models">
+<h2>7. Machine learning, model inputs, and generated results</h2>
+<p>
+            HR Fram is intended to use machine-learning techniques for crop recommendation and yield prediction.
+            Machine-learning systems operate on data and may produce outputs that contain uncertainty. The presence
+            of artificial intelligence does not make every result correct, complete, or suitable for every farm.
+          </p>
+<p>
+            The current interface still contains demo logic in places where final models have not yet been connected.
+            Those demo outputs are identified as such. Once trained models are integrated, the project should maintain
+            clear distinctions between observed data, user-provided data, external API data, model predictions,
+            calculated values, and explanatory text.
+          </p>
+<p>
+            Model-development datasets may include public agricultural datasets, district-level crop production and
+            yield information, environmental data, soil-related data, and other authorized sources. The project should
+            maintain records of dataset origin, relevant licenses or usage conditions, preprocessing steps, model
+            versions, training dates, and evaluation results. If a dataset contains personal or identifiable
+            information, additional privacy review may be required before it is used.
+          </p>
+<p>
+            HR Fram should not claim that a model uses a specific feature unless that feature is actually present in
+            appropriate training data or has been incorporated using a defensible methodology. For example, collecting
+            irrigation, fertilizer, variety, sowing date, or soil values in the interface does not automatically prove
+            that those inputs affect a model. The final system should accurately describe which inputs are genuinely
+            used by each trained model.
+          </p>
+</section>
+<section class="legal-section" id="accounts">
+<h2>8. User accounts, sessions, and administrative access</h2>
+<p>
+            A production version of HR Fram may allow users to create individual accounts so recommendations,
+            predictions, profile details, and saved history remain available across sessions and devices. Account
+            systems should use appropriate password protection, session management, authorization checks, and database
+            controls. Users should not be able to access another user's private results simply by changing a URL or
+            browser parameter.
+          </p>
+<p>
+            Administrative access should be restricted to authorized project administrators. The admin panel may
+            eventually allow authorized personnel to manage datasets, crop records, model information, system users,
+            support requests, and monitoring data. Administrative permissions create additional privacy and security
+            responsibilities, so production access should be based on authenticated roles rather than a publicly
+            accessible page.
+          </p>
+<p>
+            The current prototype may show local demo-user information inside the admin interface because both pages
+            use the same browser storage. This behavior is only for demonstration and does not represent a secure
+            multi-user administration system.
+          </p>
+</section>
+<section class="legal-section" id="sharing">
+<h2>9. Information sharing and disclosure</h2>
+<p>
+            HR Fram should limit information sharing to what is necessary for operation, development, security, and
+            authorized project administration. During the current local prototype, most information remains in the
+            user's browser unless a feature such as automatic weather retrieval sends a request to an external service.
+          </p>
+<p>
+            A future hosted version may use service providers for web hosting, databases, authentication, email
+            delivery, backups, monitoring, weather information, or other infrastructure. If these providers process
+            user information on behalf of HR Fram, the production privacy documentation should identify relevant
+            categories of providers and explain the purpose of the processing.
+          </p>
+<p>
+            HR Fram should not sell personal information. It should also avoid disclosing personal or farm-related
+            information publicly unless the user intentionally chooses a public-sharing feature and understands what
+            will be visible. Result-sharing links should be designed carefully because a link may contain or provide
+            access to farm information, prediction values, and location context.
+          </p>
+<p>
+            Information may also need to be disclosed if required by applicable law, legal process, or a valid request
+            from an authorized public authority. Any such production process should be handled carefully and limited
+            to what is legally required.
+          </p>
+</section>
+<section class="legal-section" id="retention">
+<h2>10. Data retention and deletion</h2>
+<p>
+            During the prototype stage, browser-stored information may remain until it is overwritten, manually
+            removed by the application, cleared through browser settings, or lost when browser data is reset.
+            Because there is no production backend account database yet, the project does not currently provide a
+            centralized server-side retention schedule.
+          </p>
+<p>
+            Before production deployment, HR Fram should define how long account records, recommendation history,
+            prediction history, support requests, administrative logs, model-related records, and backups are retained.
+            Retention should be based on legitimate project needs rather than storing everything indefinitely.
+          </p>
+<p>
+            A future account system should provide appropriate ways for users to correct or remove information where
+            technically and legally appropriate. Backup systems may require a limited period before deleted
+            information is fully removed from all backup copies.
+          </p>
+</section>
+<section class="legal-section" id="security">
+<h2>11. Security responsibilities and limitations</h2>
+<p>
+            HR Fram should use reasonable technical and organizational safeguards appropriate to the sensitivity of
+            the information being handled. Production controls may include secure password hashing, HTTPS encryption,
+            server-side authorization, database access controls, input validation, file-upload restrictions, logging,
+            secure backups, dependency updates, and restrictions on administrative functions.
+          </p>
+<p>
+            No website or information system can guarantee absolute security. Users should protect their account
+            credentials and avoid sharing passwords. They should also be careful when using public or shared devices.
+            If a user remains logged in on a shared computer, another person may be able to access information that
+            appears in the dashboard.
+          </p>
+<p>
+            The current prototype should not be interpreted as demonstrating all production security controls.
+            Browser-based dummy authentication exists to test the website flow, not to provide real security.
+          </p>
+</section>
+<section class="legal-section" id="rights">
+<h2>12. User choices and control over information</h2>
+<p>
+            Users should have meaningful control over the information they provide. In the current prototype, many
+            fields are optional, including profile photo, phone number, soil-test values, irrigation details,
+            fertilizer information, and seed variety. Users can choose whether to provide optional information based
+            on the feature they are using.
+          </p>
+<p>
+            Users may edit profile information through the dashboard. Optional profile photos can be removed. Browser
+            storage can also be cleared through browser settings, although doing so may remove saved results,
+            preferences, test account data, and other locally stored information.
+          </p>
+<p>
+            In a future production system, users should be able to review and correct important account information.
+            Depending on applicable requirements and the final architecture, the system may also need mechanisms for
+            account deletion, data export, consent management, communication preferences, or other privacy controls.
+          </p>
+</section>
+<section class="legal-section" id="children">
+<h2>13. Children and educational use</h2>
+<p>
+            HR Fram is being developed as an agricultural and academic decision-support project and is not specifically
+            designed as a service for children. If the project is later used in educational environments involving
+            minors, additional review may be required regarding account creation, consent, data collection, and
+            institutional supervision.
+          </p>
+<p>
+            The platform should avoid intentionally collecting unnecessary personal information from minors and should
+            be configured appropriately for the environment in which it is deployed.
+          </p>
+</section>
+<section class="legal-section" id="changes">
+<h2>14. Changes to this Privacy Policy</h2>
+<p>
+            HR Fram will continue to change as the Final Year Project progresses. Features that are currently
+            browser-only may later use Flask or another backend framework, MySQL or another database, cloud hosting,
+            production authentication, email delivery, machine-learning APIs, improved weather integration, and model
+            monitoring. Any material change to how personal or agricultural information is collected, stored, shared,
+            or retained should be reflected in an updated Privacy Policy.
+          </p>
+<p>
+            The date shown near the top of this page should be updated whenever significant privacy-related changes
+            are made. If HR Fram becomes a publicly deployed service, users should be given appropriate notice of
+            major changes rather than relying only on a silent update to this page.
+          </p>
+</section>
+<section class="legal-section" id="contact">
+<h2>15. Privacy questions and contact</h2>
+<p>
+            Questions about this Privacy Policy, the handling of information, or the operation of the current prototype
+            can be submitted through the HR Fram Help &amp; Support page. During the current development stage, support
+            requests may remain in browser storage until the backend support workflow is implemented.
+          </p>
+<p>
+            Before public deployment, the project should publish an appropriate official contact method for privacy
+            and account-related requests and define how those requests will be received, verified, assigned, and
+            resolved.
+          </p>
+<div class="policy-callout">
+            HR Fram is an academic agricultural decision-support project. This Privacy Policy is intended to provide
+            transparency about the prototype and to establish a responsible foundation for the final system. It does
+            not replace formal legal review that may be required before public or commercial deployment.
+          </div>
+</section>
+</article>
+</section>
+</div>
+</main>
+<footer><div class="container footer-row"><span>© 2026 HR Fram. All Rights Reserved.</span><span>AI Agricultural Decision-Support Platform • <a href="help.html">Help</a> • <a href="privacy.html">Privacy</a> • <a href="terms.html">Terms</a></span></div></footer>
+
+<script src="auth.js"></script><script>
+function toggleAppMenu(){
+  const nav = document.querySelector(".nav-links");
+  if(nav){ nav.classList.toggle("mobile-open"); }
+}</script></body>
+</html>

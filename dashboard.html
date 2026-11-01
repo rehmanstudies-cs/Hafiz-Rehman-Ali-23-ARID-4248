@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>User Dashboard — HR Fram</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="app.css" rel="stylesheet"/>
+<script src="auth.js"></script><script>HRFramAuth.guardUser();</script></head>
+<body>
+<header class="site-header"><div class="container nav"><a class="brand" href="index.html"><span class="brand-mark">H</span>HR Fram</a><nav class="nav-links"><a href="index.html">Home</a><a href="crop-recommendation.html">Crop Recommendation</a><a href="yield-prediction.html">Yield Prediction</a><a href="about-us.html">About Us</a><a href="history.html">History</a><a class="active" data-auth-user="" href="dashboard.html" style="display:none">Dashboard</a><a data-auth-admin="" href="admin.html" style="display:none">Admin Panel</a><a href="help.html">Help</a></nav><div class="nav-actions"><a class="btn btn-secondary" data-auth-guest="" href="login.html">Login</a><a class="btn btn-primary" data-auth-guest="" href="register.html">Get Started</a><button class="btn btn-secondary" data-auth-user="" onclick="HRFramAuth.logout()" style="display:none" type="button">Logout</button><button aria-label="Open menu" class="menu-btn" onclick="toggleAppMenu()" type="button">☰</button></div></div></header>
+<main class="dashboard-page">
+<div class="container">
+<section class="dashboard-head">
+<div>
+<div class="eyebrow"><span class="dot"></span>User Account</div>
+<h1 id="welcomeTitle">Welcome to HR Fram.</h1>
+<p>
+          Manage your profile and farm information, review recent activity,
+          and continue directly to crop recommendation or yield prediction.
+        </p>
+</div>
+<div class="head-actions">
+<a class="btn btn-secondary" href="history.html">View History</a>
+<a class="btn btn-primary" href="crop-recommendation.html">New Recommendation</a>
+</div>
+</section>
+<section class="dashboard-shell">
+<!-- ACCOUNT SIDEBAR -->
+<aside class="account-sidebar">
+<div class="avatar-wrap">
+<div class="avatar" id="sidebarAvatar">U</div>
+<button class="avatar-edit" onclick="openPhotoPicker()" title="Change profile photo" type="button">+</button>
+</div>
+<div class="sidebar-name">
+<h2 id="sidebarFullName">HR Fram User</h2>
+<p id="sidebarEmail">No email saved</p>
+<div class="username-badge" id="sidebarUsername">@username</div>
+</div>
+<nav class="sidebar-nav">
+<button class="active" onclick="goToSection('overview',this)" type="button">Overview</button>
+<button onclick="goToSection('profile',this)" type="button">Profile &amp; Farm</button>
+<button onclick="goToSection('account',this)" type="button">Account</button>
+</nav>
+<div class="account-state">
+<small>Account status</small>
+<strong>Signed In • Active</strong>
+</div>
+</aside>
+<!-- MAIN DASHBOARD -->
+<div class="dashboard-main">
+<!-- OVERVIEW -->
+<section class="section-panel" id="overview">
+<div class="panel-head">
+<div>
+<h2>Account overview</h2>
+<p>Your saved agricultural activity is summarized here.</p>
+</div>
+</div>
+<div class="stat-grid">
+<article class="stat-card">
+<small>Total Results</small>
+<strong id="totalResults">0</strong>
+<span>All saved records</span>
+</article>
+<article class="stat-card">
+<small>Recommendations</small>
+<strong id="recommendationCount">0</strong>
+<span>Crop recommendation records</span>
+</article>
+<article class="stat-card">
+<small>Yield Predictions</small>
+<strong id="predictionCount">0</strong>
+<span>Saved yield predictions</span>
+</article>
+<article class="stat-card">
+<small>Profile Complete</small>
+<strong id="profileComplete">0%</strong>
+<span>Personal + farm details</span>
+</article>
+</div>
+<h3 class="form-section-title">Quick actions</h3>
+<div class="quick-grid">
+<a class="quick-card" href="crop-recommendation.html">
+<div class="quick-icon">CR</div>
+<h3>Crop Recommendation</h3>
+<p>Check crops that better match your selected farm conditions.</p>
+</a>
+<a class="quick-card" href="yield-prediction.html">
+<div class="quick-icon">YP</div>
+<h3>Yield Prediction</h3>
+<p>Estimate expected yield and total production for a crop.</p>
+</a>
+</div>
+<h3 class="form-section-title">Recent activity</h3>
+<div class="activity-list" id="recentActivity"></div>
+</section>
+<!-- PROFILE -->
+<section class="section-panel" id="profile">
+<div class="panel-head">
+<div>
+<h2>Profile &amp; farm details</h2>
+<p>
+                Save the basic information that belongs to this user account.
+                The final backend can use these fields to prefill forms later.
+              </p>
+</div>
+</div>
+<div class="photo-box">
+<div class="photo-preview" id="photoPreview">U</div>
+<div class="photo-actions">
+<strong>Profile photo</strong>
+<p>Optional. JPG, PNG or WebP. For this demo, images up to 1 MB are stored in the browser.</p>
+<button class="btn btn-secondary btn-small" onclick="openPhotoPicker()" type="button">Choose Photo</button>
+<button class="btn btn-danger btn-small" onclick="removePhoto()" type="button">Remove</button>
+<input accept="image/jpeg,image/png,image/webp" class="file-input" id="photoInput" onchange="handlePhoto(event)" type="file"/>
+<div class="inline-error" id="photoError"></div>
+</div>
+</div>
+<form id="profileForm">
+<h3 class="form-section-title first">Personal information</h3>
+<div class="form-grid">
+<div class="form-group">
+<label for="fullName">Full name</label>
+<input id="fullName" placeholder="Your full name" required="" type="text"/>
+</div>
+<div class="form-group">
+<label for="username">Username</label>
+<input id="username" placeholder="Example: hafiz_rehman" required="" type="text"/>
+<span class="field-note">3–20 characters. Letters, numbers and underscore only.</span>
+<div class="inline-error" id="usernameError"></div>
+</div>
+<div class="form-group">
+<label for="email">Email address</label>
+<input id="email" placeholder="name@example.com" required="" type="email"/>
+</div>
+<div class="form-group">
+<label for="phone">Phone number</label>
+<input id="phone" placeholder="Optional" type="tel"/>
+</div>
+</div>
+<h3 class="form-section-title">Default farm information</h3>
+<div class="form-grid">
+<div class="form-group">
+<label for="province">Province</label>
+<select id="province">
+<option value="">Not selected</option>
+<option>Punjab</option>
+<option>Sindh</option>
+<option>Khyber Pakhtunkhwa</option>
+<option>Balochistan</option>
+<option>Islamabad Capital Territory</option>
+<option>Gilgit-Baltistan</option>
+<option>Azad Jammu &amp; Kashmir</option>
+</select>
+</div>
+<div class="form-group">
+<label for="district">District / city</label>
+<input id="district" placeholder="Example: Sahiwal" type="text"/>
+</div>
+<div class="form-group">
+<label for="farmArea">Default farm area</label>
+<input id="farmArea" min="0" placeholder="Optional" step="0.1" type="number"/>
+</div>
+<div class="form-group">
+<label for="areaUnit">Default area unit</label>
+<select id="areaUnit">
+<option>Acres</option>
+<option>Hectares</option>
+</select>
+</div>
+</div>
+<div class="form-actions">
+<button class="btn btn-primary" type="submit">Save Profile</button>
+<button class="btn btn-secondary" onclick="resetProfileForm()" type="button">Reset Changes</button>
+</div>
+<div class="save-message" id="saveMessage">Profile saved successfully in this browser.</div>
+</form>
+</section>
+<!-- ACCOUNT -->
+<section class="section-panel" id="account">
+<div class="panel-head">
+<div>
+<h2>Account information</h2>
+<p>Basic account status and storage information for the current signed-in user.</p>
+</div>
+</div>
+<div class="account-grid">
+<div class="account-info">
+<small>Username</small>
+<strong id="accountUsername">Not set</strong>
+</div>
+<div class="account-info">
+<small>Email</small>
+<strong id="accountEmail">Not set</strong>
+</div>
+<div class="account-info">
+<small>Saved records</small>
+<strong id="accountRecords">0</strong>
+</div>
+<div class="account-info">
+<small>Storage mode</small>
+<strong>Browser Demo Storage</strong>
+</div>
+</div>
+<div class="demo-warning">
+            Password changes, real logout sessions, email verification and account deletion require the backend.
+            They should be added when authentication and the database are connected, rather than faking them in the front-end.
+          </div>
+</section>
+</div>
+</section>
+</div>
+</main>
+<footer><div class="container footer-row"><span>© 2026 HR Fram. All Rights Reserved.</span><span>AI Agricultural Decision-Support Platform • <a href="help.html">Help</a> • <a href="privacy.html">Privacy</a> • <a href="terms.html">Terms</a></span></div></footer>
+<script>
+  const PROFILE_KEY = "hrFramProfile";
+  const HISTORY_KEY = "hrFramHistory";
+
+  let savedProfile = loadStoredProfile();
+
+  function toggleMenu(){
+    const nav = document.querySelector(".nav-links");
+    if(nav){
+      nav.classList.toggle("mobile-open");
+    }
+  }
+
+  function goToSection(id,button){
+    document.querySelectorAll(".sidebar-nav button").forEach(function(item){
+      item.classList.remove("active");
+    });
+
+    button.classList.add("active");
+
+    document.getElementById(id).scrollIntoView({
+      behavior:"smooth",
+      block:"start"
+    });
+  }
+
+  function loadStoredProfile(){
+    try{
+      return JSON.parse(localStorage.getItem(PROFILE_KEY) || "{}");
+    }catch(error){
+      return {};
+    }
+  }
+
+  function loadHistory(){
+    try{
+      return JSON.parse(localStorage.getItem(HISTORY_KEY) || "[]");
+    }catch(error){
+      return [];
+    }
+  }
+
+  function makeInitials(name){
+    if(!name){
+      return "U";
+    }
+
+    return name
+      .trim()
+      .split(/\s+/)
+      .slice(0,2)
+      .map(function(part){
+        return part.charAt(0).toUpperCase();
+      })
+      .join("");
+  }
+
+  function renderAvatar(containerId,profile){
+    const container = document.getElementById(containerId);
+    const initials = makeInitials(profile.fullName);
+
+    if(profile.photo){
+      container.innerHTML =
+        '<img src="' + profile.photo + '" alt="Profile photo">';
+    }else{
+      container.textContent = initials;
+    }
+  }
+
+  function renderProfile(){
+    const profile = savedProfile;
+
+    document.getElementById("fullName").value =
+      profile.fullName || "";
+
+    document.getElementById("username").value =
+      profile.username || "";
+
+    document.getElementById("email").value =
+      profile.email || "";
+
+    document.getElementById("phone").value =
+      profile.phone || "";
+
+    document.getElementById("province").value =
+      profile.province || "";
+
+    document.getElementById("district").value =
+      profile.district || "";
+
+    document.getElementById("farmArea").value =
+      profile.farmArea || "";
+
+    document.getElementById("areaUnit").value =
+      profile.areaUnit || "Acres";
+
+    document.getElementById("sidebarFullName").textContent =
+      profile.fullName || "HR Fram User";
+
+    document.getElementById("sidebarEmail").textContent =
+      profile.email || "No email saved";
+
+    document.getElementById("sidebarUsername").textContent =
+      profile.username
+        ? "@" + profile.username
+        : "@username";
+
+    document.getElementById("accountUsername").textContent =
+      profile.username
+        ? "@" + profile.username
+        : "Not set";
+
+    document.getElementById("accountEmail").textContent =
+      profile.email || "Not set";
+
+    document.getElementById("welcomeTitle").textContent =
+      profile.fullName
+        ? "Welcome, " + profile.fullName + "."
+        : "Welcome to HR Fram.";
+
+    renderAvatar("sidebarAvatar",profile);
+    renderAvatar("photoPreview",profile);
+
+    updateProfileCompletion();
+  }
+
+  function updateProfileCompletion(){
+    const profile = savedProfile;
+
+    const fields = [
+      profile.fullName,
+      profile.username,
+      profile.email,
+      profile.phone,
+      profile.province,
+      profile.district,
+      profile.farmArea,
+      profile.photo
+    ];
+
+    const completed =
+      fields.filter(function(value){
+        return String(value || "").trim() !== "";
+      }).length;
+
+    const percentage =
+      Math.round((completed / fields.length) * 100);
+
+    document.getElementById("profileComplete").textContent =
+      percentage + "%";
+  }
+
+  function validateUsername(username){
+    return /^[A-Za-z0-9_]{3,20}$/.test(username);
+  }
+
+  document.getElementById("profileForm").addEventListener("submit",function(event){
+    event.preventDefault();
+
+    const username =
+      document.getElementById("username").value.trim();
+
+    const usernameError =
+      document.getElementById("usernameError");
+
+    if(!validateUsername(username)){
+      usernameError.textContent =
+        "Use 3–20 letters, numbers or underscores only.";
+
+      usernameError.style.display =
+        "block";
+
+      return;
+    }
+
+    usernameError.style.display =
+      "none";
+
+    savedProfile = {
+      fullName:
+        document.getElementById("fullName").value.trim(),
+
+      username:username,
+
+      email:
+        document.getElementById("email").value.trim(),
+
+      phone:
+        document.getElementById("phone").value.trim(),
+
+      province:
+        document.getElementById("province").value,
+
+      district:
+        document.getElementById("district").value.trim(),
+
+      farmArea:
+        document.getElementById("farmArea").value,
+
+      areaUnit:
+        document.getElementById("areaUnit").value,
+
+      photo:
+        savedProfile.photo || ""
+    };
+
+    localStorage.setItem(
+      PROFILE_KEY,
+      JSON.stringify(savedProfile)
+    );
+
+    renderProfile();
+
+    const message =
+      document.getElementById("saveMessage");
+
+    message.style.display =
+      "block";
+
+    setTimeout(function(){
+      message.style.display =
+        "none";
+    },2500);
+  });
+
+  function resetProfileForm(){
+    renderProfile();
+
+    document.getElementById("usernameError").style.display =
+      "none";
+
+    document.getElementById("saveMessage").style.display =
+      "none";
+  }
+
+  function openPhotoPicker(){
+    document.getElementById("photoInput").click();
+  }
+
+  function handlePhoto(event){
+    const file =
+      event.target.files[0];
+
+    const error =
+      document.getElementById("photoError");
+
+    if(!file){
+      return;
+    }
+
+    const allowedTypes = [
+      "image/jpeg",
+      "image/png",
+      "image/webp"
+    ];
+
+    if(!allowedTypes.includes(file.type)){
+      error.textContent =
+        "Please choose a JPG, PNG or WebP image.";
+
+      error.style.display =
+        "block";
+
+      event.target.value =
+        "";
+
+      return;
+    }
+
+    if(file.size > 1024 * 1024){
+      error.textContent =
+        "For this browser demo, please use an image smaller than 1 MB.";
+
+      error.style.display =
+        "block";
+
+      event.target.value =
+        "";
+
+      return;
+    }
+
+    error.style.display =
+      "none";
+
+    const reader =
+      new FileReader();
+
+    reader.onload = function(){
+      savedProfile.photo =
+        reader.result;
+
+      localStorage.setItem(
+        PROFILE_KEY,
+        JSON.stringify(savedProfile)
+      );
+
+      renderProfile();
+    };
+
+    reader.readAsDataURL(file);
+  }
+
+  function removePhoto(){
+    savedProfile.photo = "";
+
+    localStorage.setItem(
+      PROFILE_KEY,
+      JSON.stringify(savedProfile)
+    );
+
+    document.getElementById("photoInput").value =
+      "";
+
+    document.getElementById("photoError").style.display =
+      "none";
+
+    renderProfile();
+  }
+
+  function renderDashboardData(){
+    const history =
+      loadHistory();
+
+    const recommendations =
+      history.filter(function(item){
+        return item.type === "Crop Recommendation";
+      });
+
+    const predictions =
+      history.filter(function(item){
+        return item.type === "Yield Prediction";
+      });
+
+    document.getElementById("totalResults").textContent =
+      history.length;
+
+    document.getElementById("recommendationCount").textContent =
+      recommendations.length;
+
+    document.getElementById("predictionCount").textContent =
+      predictions.length;
+
+    document.getElementById("accountRecords").textContent =
+      history.length;
+
+    renderRecentActivity(
+      history.slice(0,4)
+    );
+  }
+
+  function renderRecentActivity(items){
+    const container =
+      document.getElementById("recentActivity");
+
+    if(items.length === 0){
+      container.innerHTML = `
+        <div class="empty-state">
+          No saved results yet. Your latest crop recommendations
+          and yield predictions will appear here.
+        </div>
+      `;
+
+      return;
+    }
+
+    container.innerHTML =
+      items.map(function(item){
+
+        const date =
+          new Date(item.createdAt).toLocaleString();
+
+        if(item.type === "Yield Prediction"){
+          return `
+            <article class="activity-item">
+              <div class="activity-icon">YP</div>
+
+              <div>
+                <h3>${escapeHtml(item.crop || "Yield Prediction")}</h3>
+                <p>
+                  ${escapeHtml(item.location?.district || "Unknown location")}
+                  • ${date}
+                </p>
+              </div>
+
+              <a
+                class="btn btn-secondary btn-small"
+                href="result-detail.html?id=${encodeURIComponent(item.id)}">
+                View
+              </a>
+            </article>
+          `;
+        }
+
+        const bestCrop =
+          item.recommendations &&
+          item.recommendations[0]
+            ? item.recommendations[0].name
+            : "Crop Recommendation";
+
+        return `
+          <article class="activity-item">
+            <div class="activity-icon">CR</div>
+
+            <div>
+              <h3>${escapeHtml(bestCrop)}</h3>
+              <p>
+                ${escapeHtml(item.location?.district || "Unknown location")}
+                • ${date}
+              </p>
+            </div>
+
+            <a
+              class="btn btn-secondary btn-small"
+              href="result-detail.html?id=${encodeURIComponent(item.id)}">
+              View
+            </a>
+          </article>
+        `;
+      }).join("");
+  }
+
+  function escapeHtml(value){
+    return String(value || "")
+      .replaceAll("&","&amp;")
+      .replaceAll("<","&lt;")
+      .replaceAll(">","&gt;")
+      .replaceAll('"',"&quot;")
+      .replaceAll("'","&#039;");
+  }
+
+  renderProfile();
+  renderDashboardData();
+</script>
+<script>
+function toggleAppMenu(){
+  const nav = document.querySelector(".nav-links");
+  if(nav){ nav.classList.toggle("mobile-open"); }
+}</script></body>
+</html>

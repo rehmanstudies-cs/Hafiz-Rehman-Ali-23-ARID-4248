@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>Login — HR Fram</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="auth.css" rel="stylesheet"/>
+</head>
+<body>
+<main class="auth-page">
+<section class="visual-panel">
+<a class="brand" href="index.html" style="color:white">
+<span class="brand-mark">H</span>
+      HR Fram
+    </a>
+<div class="visual-content">
+<div class="kicker"><span class="kicker-dot"></span> Pakistan-first smart farming</div>
+<h1>Welcome back to smarter farming.</h1>
+<p>Login to review saved recommendations, yield predictions and account activity from your dashboard.</p>
+<div class="feature-list">
+<div class="feature"><span class="feature-icon">✓</span>Review saved recommendations</div>
+<div class="feature"><span class="feature-icon">✓</span>Access yield prediction history</div>
+<div class="feature"><span class="feature-icon">✓</span>Open your profile and dashboard</div>
+</div>
+</div>
+<div class="visual-footer">HR Fram — AI Agricultural Decision-Support Platform</div>
+</section>
+<section class="form-area">
+<div class="form-wrap">
+<div class="top-links">
+<a class="back-link" href="index.html">← Back to Home</a>
+<span>New here? <a href="register.html">Create account</a></span>
+</div>
+<div class="form-card">
+<div class="form-heading">
+<div>
+<h2>Login</h2>
+<p>Enter your HR Fram account details.</p>
+</div>
+<span class="form-badge">USER ACCESS</span>
+</div>
+<div class="demo-account"><strong>Test accounts</strong>User: demo@hrfram.test / Demo1234<br/>Admin: admin@hrfram.test / Admin1234</div>
+<form id="loginForm">
+<div class="form-group">
+<label for="email">Email address</label>
+<div class="input-wrap">
+<span class="input-icon">@</span>
+<input class="no-end-icon" id="email" placeholder="name@example.com" required="" type="email"/>
+</div>
+</div>
+<div class="form-group">
+<label for="loginPassword">Password</label>
+<div class="input-wrap">
+<span class="input-icon">•</span>
+<input id="loginPassword" placeholder="Enter your password" required="" type="password"/>
+<button class="password-toggle" onclick="togglePassword('loginPassword',this)" type="button">Show</button>
+</div>
+</div>
+<div class="form-options">
+<label class="check-row">
+<input id="rememberMe" type="checkbox"/>
+              Remember me
+            </label>
+<a href="forgot-password.html">Forgot password?</a>
+</div>
+<button class="primary-button" type="submit">Login to HR Fram</button>
+<div class="auth-message" id="loginMessage"></div>
+</form>
+<p class="switch-text">
+          Don't have an account?
+          <a href="register.html">Create one</a>
+</p>
+<div class="security-note">
+<span>This is a front-end demo account. Real authentication will use the backend and database later.</span>
+</div>
+</div>
+</div>
+</section>
+</main>
+
+
+<script src="auth.js"></script><script>
+function togglePassword(id,button){
+  const input = document.getElementById(id);
+  const show = input.type === "password";
+  input.type = show ? "text" : "password";
+  button.textContent = show ? "Hide" : "Show";
+}
+
+document.getElementById("loginForm").addEventListener("submit",function(event){
+  event.preventDefault();
+
+  const email = document.getElementById("email").value.trim();
+  const password = document.getElementById("loginPassword").value;
+  const account = HRFramAuth.authenticate(email,password);
+  const message = document.getElementById("loginMessage");
+
+  if(!account){
+    message.className = "auth-message error";
+    message.textContent = "Email or password is incorrect. Use one of the test accounts shown above or a locally registered account.";
+    message.style.display = "block";
+    return;
+  }
+
+  HRFramAuth.setSession(account);
+
+  if((account.role || "user") === "user"){
+    const existingProfile = JSON.parse(localStorage.getItem("hrFramProfile") || "{}");
+
+    if(!existingProfile.email || String(existingProfile.email).toLowerCase() !== String(account.email).toLowerCase()){
+      localStorage.setItem("hrFramProfile",JSON.stringify({
+        fullName:account.fullName || "",
+        username:account.username || "",
+        email:account.email || "",
+        phone:"",
+        province:"",
+        district:"",
+        farmArea:"",
+        areaUnit:"Acres",
+        photo:""
+      }));
+    }
+  }
+
+  message.className = "auth-message";
+  message.textContent = account.role === "admin"
+    ? "Admin login successful. Opening Admin Panel..."
+    : "Login successful. Opening Dashboard...";
+  message.style.display = "block";
+
+  setTimeout(function(){
+    window.location.href = account.role === "admin" ? "admin.html" : "dashboard.html";
+  },250);
+});</script></body>
+</html>

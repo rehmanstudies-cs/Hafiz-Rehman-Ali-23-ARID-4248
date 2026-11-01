@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>Help &amp; Support — HR Fram</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="app.css" rel="stylesheet"/>
+</head>
+<body>
+<header class="site-header"><div class="container nav"><a class="brand" href="index.html"><span class="brand-mark">H</span>HR Fram</a><nav class="nav-links"><a href="index.html">Home</a><a href="crop-recommendation.html">Crop Recommendation</a><a href="yield-prediction.html">Yield Prediction</a><a href="about-us.html">About Us</a><a href="history.html">History</a><a data-auth-user="" href="dashboard.html" style="display:none">Dashboard</a><a data-auth-admin="" href="admin.html" style="display:none">Admin Panel</a><a class="active" href="help.html">Help</a></nav><div class="nav-actions"><a class="btn btn-secondary" data-auth-guest="" href="login.html">Login</a><a class="btn btn-primary" data-auth-guest="" href="register.html">Get Started</a><button class="btn btn-secondary" data-auth-user="" onclick="HRFramAuth.logout()" style="display:none" type="button">Logout</button><button aria-label="Open menu" class="menu-btn" onclick="toggleAppMenu()" type="button">☰</button></div></div></header>
+<main class="content-page">
+<div class="container">
+<section class="content-hero">
+<div class="eyebrow"><span class="dot"></span>Help &amp; Support</div>
+<h1>Help with HR Fram, without unnecessary complexity.</h1>
+<p>
+        Find answers to common questions or submit a support request.
+        During the front-end stage, support requests are stored only in this browser.
+      </p>
+</section>
+<section class="help-layout">
+<div class="help-card" id="contact">
+<h2>Send a support request</h2>
+<p>Use this form for account, recommendation, yield prediction or technical questions.</p>
+<form id="supportForm">
+<div class="support-grid">
+<div class="form-group">
+<label for="supportName">Name</label>
+<input id="supportName" placeholder="Your name" required="" type="text"/>
+</div>
+<div class="form-group">
+<label for="supportEmail">Email</label>
+<input id="supportEmail" placeholder="name@example.com" required="" type="email"/>
+</div>
+<div class="form-group">
+<label for="supportCategory">Category</label>
+<select id="supportCategory" required="">
+<option value="">Select category</option>
+<option>Account &amp; Login</option>
+<option>Crop Recommendation</option>
+<option>Yield Prediction</option>
+<option>Weather Data</option>
+<option>History &amp; Reports</option>
+<option>Technical Problem</option>
+<option>Other</option>
+</select>
+</div>
+<div class="form-group">
+<label for="supportSubject">Subject</label>
+<input id="supportSubject" placeholder="Short summary" required="" type="text"/>
+</div>
+<div class="form-group full">
+<label for="supportMessageText">Message</label>
+<input id="supportMessageText" placeholder="Describe the problem or question" required="" type="text"/>
+</div>
+</div>
+<div class="action-row">
+<button class="btn btn-primary" type="submit">Submit Request</button>
+</div>
+<div class="support-message" id="supportMessage"></div>
+</form>
+</div>
+<aside class="support-side">
+<div class="support-option">
+<small>Account Help</small>
+<strong>Login or password problem</strong>
+<p>Use Forgot Password to create a demo reset link and test the complete recovery flow.</p>
+</div>
+<div class="support-option">
+<small>Prediction Help</small>
+<strong>Understanding a result</strong>
+<p>Results are currently demo outputs until the trained machine-learning models replace them.</p>
+</div>
+<div class="support-option">
+<small>Project Stage</small>
+<strong>Front-end prototype</strong>
+<p>Real email delivery, server tickets and account-wide support history require the backend.</p>
+</div>
+</aside>
+</section>
+<section class="help-card" style="margin-top:22px">
+<h2>Frequently asked questions</h2>
+<p>Common questions about the current HR Fram prototype.</p>
+<div class="faq-list">
+<div class="faq-item">
+<button class="faq-question" onclick="toggleFaq(this)" type="button">
+            Is the crop recommendation already using the final AI model?
+            <span>+</span>
+</button>
+<div class="faq-answer">
+            No. The current interface uses clearly marked demo results. The trained recommendation model will replace that logic later.
+          </div>
+</div>
+<div class="faq-item">
+<button class="faq-question" onclick="toggleFaq(this)" type="button">
+            Can I move from Crop Recommendation to Yield Prediction?
+            <span>+</span>
+</button>
+<div class="faq-answer">
+            Yes. The planned workflow carries the selected farm, weather and soil context into Yield Prediction so the user does not enter the same information again.
+          </div>
+</div>
+<div class="faq-item">
+<button class="faq-question" onclick="toggleFaq(this)" type="button">
+            Are saved results stored online?
+            <span>+</span>
+</button>
+<div class="faq-answer">
+            Not yet. During the front-end stage, profile and result history are stored in the current browser using localStorage.
+          </div>
+</div>
+<div class="faq-item">
+<button class="faq-question" onclick="toggleFaq(this)" type="button">
+            Does HR Fram replace agricultural professionals?
+            <span>+</span>
+</button>
+<div class="faq-answer">
+            No. HR Fram is a decision-support system and its results should be treated as guidance rather than a guarantee or replacement for professional agricultural advice.
+          </div>
+</div>
+</div>
+</section>
+</div>
+</main>
+<footer><div class="container footer-row"><span>© 2026 HR Fram. All Rights Reserved.</span><span>AI Agricultural Decision-Support Platform • <a href="help.html">Help</a> • <a href="privacy.html">Privacy</a> • <a href="terms.html">Terms</a></span></div></footer>
+
+<script>
+function toggleMenu(){
+  const nav = document.querySelector(".nav-links");
+  if(nav){ nav.classList.toggle("mobile-open"); }
+}
+
+function toggleFaq(button){
+  const item = button.closest(".faq-item");
+  item.classList.toggle("open");
+  button.querySelector("span").textContent =
+    item.classList.contains("open") ? "−" : "+";
+}
+
+document.getElementById("supportForm").addEventListener("submit",function(event){
+  event.preventDefault();
+
+  const tickets =
+    JSON.parse(localStorage.getItem("hrFramSupportTickets") || "[]");
+
+  const ticket = {
+    id:"SUP-" + Date.now().toString().slice(-8),
+    createdAt:new Date().toISOString(),
+    name:document.getElementById("supportName").value.trim(),
+    email:document.getElementById("supportEmail").value.trim(),
+    category:document.getElementById("supportCategory").value,
+    subject:document.getElementById("supportSubject").value.trim(),
+    message:document.getElementById("supportMessageText").value.trim(),
+    status:"Demo Submitted"
+  };
+
+  tickets.unshift(ticket);
+
+  localStorage.setItem(
+    "hrFramSupportTickets",
+    JSON.stringify(tickets)
+  );
+
+  const message =
+    document.getElementById("supportMessage");
+
+  message.textContent =
+    "Support request saved in this browser. Reference: " + ticket.id;
+
+  message.style.display =
+    "block";
+
+  document.getElementById("supportForm").reset();
+});
+</script>
+<script src="auth.js"></script><script>
+function toggleAppMenu(){
+  const nav = document.querySelector(".nav-links");
+  if(nav){ nav.classList.toggle("mobile-open"); }
+}</script></body>
+</html>

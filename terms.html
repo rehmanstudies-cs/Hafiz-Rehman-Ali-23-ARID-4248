@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>Terms — HR Fram</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="app.css" rel="stylesheet"/>
+</head>
+<body>
+<header class="site-header"><div class="container nav"><a class="brand" href="index.html"><span class="brand-mark">H</span>HR Fram</a><nav class="nav-links"><a href="index.html">Home</a><a href="crop-recommendation.html">Crop Recommendation</a><a href="yield-prediction.html">Yield Prediction</a><a href="about-us.html">About Us</a><a href="history.html">History</a><a data-auth-user="" href="dashboard.html" style="display:none">Dashboard</a><a data-auth-admin="" href="admin.html" style="display:none">Admin Panel</a><a href="help.html">Help</a></nav><div class="nav-actions"><a class="btn btn-secondary" data-auth-guest="" href="login.html">Login</a><a class="btn btn-primary" data-auth-guest="" href="register.html">Get Started</a><button class="btn btn-secondary" data-auth-user="" onclick="HRFramAuth.logout()" style="display:none" type="button">Logout</button><button aria-label="Open menu" class="menu-btn" onclick="toggleAppMenu()" type="button">☰</button></div></div></header>
+<main class="content-page">
+<div class="container">
+<section class="content-hero">
+<div class="eyebrow"><span class="dot"></span>Terms of Use</div>
+<h1>Terms for using the HR Fram prototype.</h1>
+<p>
+        These terms describe the intended use of the academic prototype.
+        They are a project-stage draft and should receive formal legal review before public production use.
+      </p>
+</section>
+<div class="prototype-notice">
+      HR Fram is currently an academic decision-support prototype. Model outputs and demo results must not be treated as guaranteed agricultural outcomes.
+    </div>
+<section class="legal-layout">
+<nav class="legal-nav">
+<a href="#purpose">Purpose</a>
+<a href="#accounts">Accounts</a>
+<a href="#agriculture">Agricultural Guidance</a>
+<a href="#acceptable">Acceptable Use</a>
+<a href="#availability">Availability</a>
+<a href="#changes">Changes</a>
+</nav>
+<article class="legal-card">
+<section class="legal-section" id="purpose">
+<h2>1. Purpose of HR Fram</h2>
+<p>
+            HR Fram is being developed as an AI-based agricultural decision-support system for crop recommendation and yield prediction.
+            The current version is a front-end academic prototype and some outputs are demonstration values.
+          </p>
+</section>
+<section class="legal-section" id="accounts">
+<h2>2. Accounts and access</h2>
+<p>
+            Users are responsible for the information they enter into the system.
+            The current dummy login account is provided only for prototype testing.
+            Real account security, password hashing, role-based access and database authentication will be implemented in the backend stage.
+          </p>
+</section>
+<section class="legal-section" id="agriculture">
+<h2>3. Agricultural guidance and limitations</h2>
+<p>
+            Recommendations and yield estimates are intended to support decision-making, not guarantee crop performance or financial return.
+            Agricultural outcomes can be affected by weather, soil, irrigation, seed variety, pests, disease, management practices and other factors.
+          </p>
+<p>
+            Users should consider appropriate professional or local agricultural advice when making important farming decisions.
+          </p>
+</section>
+<section class="legal-section" id="acceptable">
+<h2>4. Acceptable use</h2>
+<p>Users should not:</p>
+<ul>
+<li>attempt to interfere with or damage the service;</li>
+<li>upload malicious or intentionally misleading files;</li>
+<li>attempt unauthorized access to administrative features or other accounts;</li>
+<li>present prototype demonstration results as guaranteed or officially certified agricultural advice.</li>
+</ul>
+</section>
+<section class="legal-section" id="availability">
+<h2>5. Availability and accuracy</h2>
+<p>
+            Because HR Fram is still under development, features may change, become unavailable or produce incomplete results.
+            Weather services, datasets and machine-learning models may also have limitations or temporary failures.
+          </p>
+</section>
+<section class="legal-section" id="changes">
+<h2>6. Future changes</h2>
+<p>
+            These terms should be updated before production deployment and whenever material changes are made to authentication,
+            data handling, model functionality, hosting or external integrations.
+          </p>
+</section>
+</article>
+</section>
+</div>
+</main>
+<footer><div class="container footer-row"><span>© 2026 HR Fram. All Rights Reserved.</span><span>AI Agricultural Decision-Support Platform • <a href="help.html">Help</a> • <a href="privacy.html">Privacy</a> • <a href="terms.html">Terms</a></span></div></footer>
+
+<script src="auth.js"></script><script>
+function toggleAppMenu(){
+  const nav = document.querySelector(".nav-links");
+  if(nav){ nav.classList.toggle("mobile-open"); }
+}</script></body>
+</html>

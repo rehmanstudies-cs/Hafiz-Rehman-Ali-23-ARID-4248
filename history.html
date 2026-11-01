@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>History — HR Fram</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="app.css" rel="stylesheet"/>
+</head>
+<body>
+<header class="site-header"><div class="container nav"><a class="brand" href="index.html"><span class="brand-mark">H</span>HR Fram</a><nav class="nav-links"><a href="index.html">Home</a><a href="crop-recommendation.html">Crop Recommendation</a><a href="yield-prediction.html">Yield Prediction</a><a href="about-us.html">About Us</a><a class="active" href="history.html">History</a><a data-auth-user="" href="dashboard.html" style="display:none">Dashboard</a><a data-auth-admin="" href="admin.html" style="display:none">Admin Panel</a><a href="help.html">Help</a></nav><div class="nav-actions"><a class="btn btn-secondary" data-auth-guest="" href="login.html">Login</a><a class="btn btn-primary" data-auth-guest="" href="register.html">Get Started</a><button class="btn btn-secondary" data-auth-user="" onclick="HRFramAuth.logout()" style="display:none" type="button">Logout</button><button aria-label="Open menu" class="menu-btn" onclick="toggleAppMenu()" type="button">☰</button></div></div></header>
+<section class="page-intro">
+<div class="container">
+<div class="eyebrow"><span class="dot"></span> My Account</div>
+<h1>Saved result history.</h1>
+<p>
+      Crop recommendations and yield predictions are stored together here.
+      Each saved result can open the same detailed report page used for sharing and printing.
+    </p>
+</div>
+</section>
+<main class="container" style="padding-bottom:70px">
+<div class="history-toolbar">
+<div>
+<strong id="historyCount">0 saved results</strong>
+</div>
+<div style="display:flex;gap:10px;flex-wrap:wrap">
+<a class="btn btn-secondary" href="crop-recommendation.html">New Recommendation</a>
+<a class="btn btn-primary" href="yield-prediction.html">New Yield Prediction</a>
+</div>
+</div>
+<div class="history-list" id="historyList"></div>
+</main>
+<footer><div class="container footer-row"><span>© 2026 HR Fram. All Rights Reserved.</span><span>AI Agricultural Decision-Support Platform • <a href="help.html">Help</a> • <a href="privacy.html">Privacy</a> • <a href="terms.html">Terms</a></span></div></footer>
+<script>
+  const historyList =
+    document.getElementById("historyList");
+
+  const historyCount =
+    document.getElementById("historyCount");
+
+  function loadHistory(){
+    const history =
+      JSON.parse(localStorage.getItem("hrFramHistory") || "[]");
+
+    historyCount.textContent =
+      history.length +
+      (history.length === 1 ? " saved result" : " saved results");
+
+    if(history.length === 0){
+      historyList.innerHTML = `
+        <div class="empty-state">
+          No saved results yet.<br><br>
+
+          <a class="btn btn-secondary" href="crop-recommendation.html">
+            Crop Recommendation
+          </a>
+
+          <a class="btn btn-primary" href="yield-prediction.html">
+            Yield Prediction
+          </a>
+        </div>
+      `;
+
+      return;
+    }
+
+    historyList.innerHTML =
+      history.map(function(item){
+
+        const date =
+          new Date(item.createdAt).toLocaleString();
+
+        if(item.type === "Yield Prediction"){
+          const mainTitle =
+            item.crop + " — Yield Prediction";
+
+          return `
+            <article class="history-card">
+              <div>
+                <h3>${mainTitle}</h3>
+
+                <p>
+                  ${item.location.district},
+                  ${item.location.province}
+                  • ${date}
+                </p>
+
+                <div class="history-meta">
+                  <span>${item.financialYear}</span>
+                  <span>${item.prediction.predictedYield} t/ha</span>
+                  <span>${item.prediction.estimatedProduction} t estimated production</span>
+                  <span>${item.sowingDate || "Sowing date not set"}</span>
+                </div>
+              </div>
+
+              <a
+                class="btn btn-secondary"
+                href="result-detail.html?id=${encodeURIComponent(item.id)}">
+                View Details
+              </a>
+            </article>
+          `;
+        }
+
+        const bestCrop =
+          item.recommendations && item.recommendations[0]
+            ? item.recommendations[0].name
+            : "Recommendation";
+
+        return `
+          <article class="history-card">
+            <div>
+              <h3>${bestCrop} — ${item.type}</h3>
+
+              <p>
+                ${item.location.district},
+                ${item.location.province}
+                • ${date}
+              </p>
+
+              <div class="history-meta">
+                <span>${item.season || "Season not set"}</span>
+                <span>${item.weatherMode === "auto" ? "Automatic weather" : "Manual weather"}</span>
+                <span>${item.recommendations[0].score}% demo match</span>
+              </div>
+            </div>
+
+            <a
+              class="btn btn-secondary"
+              href="result-detail.html?id=${encodeURIComponent(item.id)}">
+              View Details
+            </a>
+          </article>
+        `;
+      }).join("");
+  }
+
+  loadHistory();
+</script>
+<script>
+function toggleAppMenu(){
+  const nav = document.querySelector(".nav-links");
+  if(nav){ nav.classList.toggle("mobile-open"); }
+}
+</script>
+<script src="auth.js"></script></body>
+</html>

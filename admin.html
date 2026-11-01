@@ -1,0 +1,899 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>Admin Panel — HR Fram</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="app.css" rel="stylesheet"/>
+<script src="auth.js"></script><script>HRFramAuth.guardAdmin();</script></head>
+<body>
+<header class="site-header"><div class="container nav"><a class="brand" href="index.html"><span class="brand-mark">H</span>HR Fram</a><nav class="nav-links"><a href="index.html">Home</a><a href="crop-recommendation.html">Crop Recommendation</a><a href="yield-prediction.html">Yield Prediction</a><a href="about-us.html">About Us</a><a href="history.html">History</a><a data-auth-user="" href="dashboard.html" style="display:none">Dashboard</a><a class="active" data-auth-admin="" href="admin.html" style="display:none">Admin Panel</a><a href="help.html">Help</a></nav><div class="nav-actions"><a class="btn btn-secondary" data-auth-guest="" href="login.html">Login</a><a class="btn btn-primary" data-auth-guest="" href="register.html">Get Started</a><button class="btn btn-secondary" data-auth-user="" onclick="HRFramAuth.logout()" style="display:none" type="button">Logout</button><button aria-label="Open menu" class="menu-btn" onclick="toggleAppMenu()" type="button">☰</button></div></div></header>
+<main class="admin-page">
+<div class="container">
+<section class="admin-head">
+<div>
+<div class="eyebrow"><span class="dot"></span>Administration</div>
+<h1>HR Fram Admin Panel</h1>
+<p>
+          Monitor the front-end demo, manage crop records and dataset metadata,
+          review local user activity, and keep model readiness information in one place.
+        </p>
+</div>
+<div class="admin-badge">ADMIN DEMO • BACKEND NOT CONNECTED</div>
+</section>
+<section class="admin-layout">
+<!-- SIDEBAR -->
+<aside class="admin-sidebar">
+<div class="admin-identity">
+<small>Signed in as</small>
+<strong>Administrator</strong>
+<span>HR Fram Admin</span>
+</div>
+<nav class="admin-menu">
+<button class="active" data-section="overview" onclick="showSection('overview',this)" type="button">Overview</button>
+<button data-section="crops" onclick="showSection('crops',this)" type="button">Manage Crops</button>
+<button data-section="datasets" onclick="showSection('datasets',this)" type="button">Datasets</button>
+<button data-section="users" onclick="showSection('users',this)" type="button">Users</button>
+<button data-section="models" onclick="showSection('models',this)" type="button">Models</button>
+<button data-section="activity" onclick="showSection('activity',this)" type="button">Activity Log</button>
+</nav>
+<div class="admin-note">
+          This is a working front-end administration demo.
+          Database-wide users, real model deployment and server uploads require the backend.
+        </div>
+</aside>
+<!-- CONTENT -->
+<div class="admin-content">
+<!-- OVERVIEW -->
+<section class="admin-section active" id="overview">
+<div class="admin-section-head">
+<div>
+<h2>System overview</h2>
+<p>Summary of the data currently available in this browser demo.</p>
+</div>
+</div>
+<div class="admin-stat-grid">
+<div class="admin-stat">
+<small>Saved Results</small>
+<strong id="statResults">0</strong>
+<span>Recommendation + yield records</span>
+</div>
+<div class="admin-stat">
+<small>Managed Crops</small>
+<strong id="statCrops">0</strong>
+<span>Admin crop catalog</span>
+</div>
+<div class="admin-stat">
+<small>Dataset Records</small>
+<strong id="statDatasets">0</strong>
+<span>Dataset metadata entries</span>
+</div>
+<div class="admin-stat">
+<small>Local Users</small>
+<strong id="statUsers">0</strong>
+<span>Browser demo profiles</span>
+</div>
+</div>
+<h3 class="admin-subtitle">Model readiness</h3>
+<div class="model-grid">
+<article class="model-card">
+<div class="model-card-top">
+<div>
+<h3>Crop Recommendation Model</h3>
+<p>Classification model integration point.</p>
+</div>
+<span class="status-pill status-offline">Not Connected</span>
+</div>
+<div class="model-meta">
+<div>
+<small>Production status</small>
+<strong>Pending training/integration</strong>
+</div>
+<div>
+<small>Interface</small>
+<strong>Ready</strong>
+</div>
+</div>
+</article>
+<article class="model-card">
+<div class="model-card-top">
+<div>
+<h3>Yield Prediction Model</h3>
+<p>Regression model integration point.</p>
+</div>
+<span class="status-pill status-offline">Not Connected</span>
+</div>
+<div class="model-meta">
+<div>
+<small>Production status</small>
+<strong>Pending training/integration</strong>
+</div>
+<div>
+<small>Interface</small>
+<strong>Ready</strong>
+</div>
+</div>
+</article>
+</div>
+<div class="backend-warning">
+            The admin overview intentionally does not invent model accuracy, validation scores,
+            active server users or deployed model versions. Those values should come from the real backend and trained models.
+          </div>
+</section>
+<!-- CROPS -->
+<section class="admin-section" id="crops">
+<div class="admin-section-head">
+<div>
+<h2>Manage crops</h2>
+<p>Add, edit or remove crop catalog entries used by the admin demo.</p>
+</div>
+</div>
+<h3 class="admin-subtitle first">Add / edit crop</h3>
+<form id="cropForm">
+<input id="cropEditId" type="hidden"/>
+<div class="admin-form-grid three">
+<div class="form-group">
+<label for="cropName">Crop name</label>
+<input id="cropName" placeholder="Example: Wheat" required="" type="text"/>
+</div>
+<div class="form-group">
+<label for="cropSeason">Season</label>
+<select id="cropSeason" required="">
+<option value="">Select season</option>
+<option>Rabi</option>
+<option>Kharif</option>
+<option>Both / Other</option>
+</select>
+</div>
+<div class="form-group">
+<label for="cropStatus">Status</label>
+<select id="cropStatus">
+<option>Active</option>
+<option>Draft</option>
+</select>
+</div>
+</div>
+<div class="form-group" style="margin-top:14px">
+<label for="cropNote">Admin note</label>
+<input id="cropNote" placeholder="Optional crop note" type="text"/>
+</div>
+<div class="admin-actions">
+<button class="btn btn-primary" type="submit">Save Crop</button>
+<button class="btn btn-secondary" onclick="resetCropForm()" type="button">Clear</button>
+</div>
+<div class="admin-message" id="cropMessage"></div>
+</form>
+<h3 class="admin-subtitle">Crop catalog</h3>
+<div class="table-wrap">
+<table class="admin-table">
+<thead>
+<tr>
+<th>Crop</th>
+<th>Season</th>
+<th>Status</th>
+<th>Note</th>
+<th>Actions</th>
+</tr>
+</thead>
+<tbody id="cropTableBody"></tbody>
+</table>
+</div>
+</section>
+<!-- DATASETS -->
+<section class="admin-section" id="datasets">
+<div class="admin-section-head">
+<div>
+<h2>Dataset management</h2>
+<p>Register dataset files and keep simple metadata for the front-end demo.</p>
+</div>
+</div>
+<div class="dataset-drop">
+<strong>Select a dataset file</strong>
+<p>
+              CSV, JSON, Parquet or Excel files can be selected.
+              The browser demo stores only file metadata, not the complete dataset.
+            </p>
+<button class="btn btn-secondary" onclick="openDatasetPicker()" type="button">Choose Dataset</button>
+<input accept=".csv,.json,.parquet,.xlsx,.xls" class="dataset-file" id="datasetInput" onchange="handleDatasetSelection(event)" type="file"/>
+<div class="file-summary" id="fileSummary"></div>
+</div>
+<div class="admin-form-grid" style="margin-top:16px">
+<div class="form-group">
+<label for="datasetPurpose">Dataset purpose</label>
+<select id="datasetPurpose">
+<option>Crop Recommendation</option>
+<option>Yield Prediction</option>
+<option>Weather / Ground Truth</option>
+<option>Other</option>
+</select>
+</div>
+<div class="form-group">
+<label for="datasetVersion">Version / label</label>
+<input id="datasetVersion" placeholder="Example: v1" type="text"/>
+</div>
+</div>
+<div class="admin-actions">
+<button class="btn btn-primary" onclick="registerDataset()" type="button">Register Dataset</button>
+</div>
+<div class="admin-message" id="datasetMessage"></div>
+<h3 class="admin-subtitle">Registered datasets</h3>
+<div class="table-wrap">
+<table class="admin-table">
+<thead>
+<tr>
+<th>File</th>
+<th>Purpose</th>
+<th>Version</th>
+<th>Size</th>
+<th>Added</th>
+<th>Actions</th>
+</tr>
+</thead>
+<tbody id="datasetTableBody"></tbody>
+</table>
+</div>
+<div class="backend-warning">
+            Real dataset upload, validation, preprocessing and database/model storage must be implemented on the server.
+            This page currently demonstrates the admin workflow and metadata management only.
+          </div>
+</section>
+<!-- USERS -->
+<section class="admin-section" id="users">
+<div class="admin-section-head">
+<div>
+<h2>User overview</h2>
+<p>Local demo account information available in this browser.</p>
+</div>
+</div>
+<div class="table-wrap">
+<table class="admin-table">
+<thead>
+<tr>
+<th>Name</th>
+<th>Username</th>
+<th>Email</th>
+<th>Location</th>
+<th>Saved Results</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody id="userTableBody"></tbody>
+</table>
+</div>
+<div class="backend-warning">
+            A real administrator should only see and manage users after role-based authentication and database access are implemented.
+            The browser demo cannot list accounts created on other devices or browsers.
+          </div>
+</section>
+<!-- MODELS -->
+<section class="admin-section" id="models">
+<div class="admin-section-head">
+<div>
+<h2>Model status</h2>
+<p>Model integration and evaluation placeholders based on the planned system architecture.</p>
+</div>
+</div>
+<div class="model-grid">
+<article class="model-card">
+<div class="model-card-top">
+<div>
+<h3>Crop Recommendation</h3>
+<p>Machine-learning classification component.</p>
+</div>
+<span class="status-pill status-offline">Not Connected</span>
+</div>
+<div class="model-meta">
+<div>
+<small>Model version</small>
+<strong>Not available</strong>
+</div>
+<div>
+<small>Validation metric</small>
+<strong>Not available</strong>
+</div>
+<div>
+<small>Last trained</small>
+<strong>Not available</strong>
+</div>
+<div>
+<small>Deployment</small>
+<strong>Pending</strong>
+</div>
+</div>
+</article>
+<article class="model-card">
+<div class="model-card-top">
+<div>
+<h3>Yield Prediction</h3>
+<p>Regression component for yield estimation.</p>
+</div>
+<span class="status-pill status-offline">Not Connected</span>
+</div>
+<div class="model-meta">
+<div>
+<small>Model version</small>
+<strong>Not available</strong>
+</div>
+<div>
+<small>Validation metric</small>
+<strong>Not available</strong>
+</div>
+<div>
+<small>Last trained</small>
+<strong>Not available</strong>
+</div>
+<div>
+<small>Deployment</small>
+<strong>Pending</strong>
+</div>
+</div>
+</article>
+</div>
+<div class="backend-warning">
+            Once the models are trained, this section can display real metrics such as classification accuracy,
+            regression MAE/RMSE/R², model version, training date and deployment status.
+          </div>
+</section>
+<!-- ACTIVITY -->
+<section class="admin-section" id="activity">
+<div class="admin-section-head">
+<div>
+<h2>Admin activity log</h2>
+<p>Recent crop and dataset actions performed in this browser demo.</p>
+</div>
+<button class="btn btn-secondary btn-small" onclick="clearAdminLog()" type="button">Clear Log</button>
+</div>
+<div class="log-list" id="logList"></div>
+</section>
+</div>
+</section>
+</div>
+</main>
+<footer><div class="container footer-row"><span>© 2026 HR Fram. All Rights Reserved.</span><span>AI Agricultural Decision-Support Platform • <a href="help.html">Help</a> • <a href="privacy.html">Privacy</a> • <a href="terms.html">Terms</a></span></div></footer>
+<script>
+  const CROP_KEY = "hrFramAdminCrops";
+  const DATASET_KEY = "hrFramAdminDatasets";
+  const LOG_KEY = "hrFramAdminLog";
+  const HISTORY_KEY = "hrFramHistory";
+  const PROFILE_KEY = "hrFramProfile";
+
+  let selectedDatasetFile = null;
+
+  function toggleMenu(){
+    const nav = document.querySelector(".nav-links");
+    if(nav){
+      nav.classList.toggle("mobile-open");
+    }
+  }
+
+  function safeParse(key,fallback){
+    try{
+      return JSON.parse(
+        localStorage.getItem(key) || JSON.stringify(fallback)
+      );
+    }catch(error){
+      return fallback;
+    }
+  }
+
+  function showSection(id,button){
+    document.querySelectorAll(".admin-section").forEach(function(section){
+      section.classList.remove("active");
+    });
+
+    document.querySelectorAll(".admin-menu button").forEach(function(item){
+      item.classList.remove("active");
+    });
+
+    document.getElementById(id).classList.add("active");
+    button.classList.add("active");
+  }
+
+  function seedCrops(){
+    const existing = safeParse(CROP_KEY,[]);
+
+    if(existing.length > 0){
+      return;
+    }
+
+    const starter = [
+      {
+        id:"crop-wheat",
+        name:"Wheat",
+        season:"Rabi",
+        status:"Active",
+        note:"Starter admin catalog record"
+      },
+      {
+        id:"crop-rice",
+        name:"Rice",
+        season:"Kharif",
+        status:"Active",
+        note:"Starter admin catalog record"
+      },
+      {
+        id:"crop-maize",
+        name:"Maize",
+        season:"Kharif",
+        status:"Active",
+        note:"Starter admin catalog record"
+      }
+    ];
+
+    localStorage.setItem(
+      CROP_KEY,
+      JSON.stringify(starter)
+    );
+  }
+
+  function addLog(action,detail){
+    const log = safeParse(LOG_KEY,[]);
+
+    log.unshift({
+      id:"log-" + Date.now(),
+      action:action,
+      detail:detail,
+      time:new Date().toISOString()
+    });
+
+    localStorage.setItem(
+      LOG_KEY,
+      JSON.stringify(log.slice(0,50))
+    );
+
+    renderLogs();
+  }
+
+  function escapeHtml(value){
+    return String(value || "")
+      .replaceAll("&","&amp;")
+      .replaceAll("<","&lt;")
+      .replaceAll(">","&gt;")
+      .replaceAll('"',"&quot;")
+      .replaceAll("'","&#039;");
+  }
+
+  function updateOverview(){
+    const history = safeParse(HISTORY_KEY,[]);
+    const crops = safeParse(CROP_KEY,[]);
+    const datasets = safeParse(DATASET_KEY,[]);
+    const profile = safeParse(PROFILE_KEY,{});
+
+    document.getElementById("statResults").textContent =
+      history.length;
+
+    document.getElementById("statCrops").textContent =
+      crops.length;
+
+    document.getElementById("statDatasets").textContent =
+      datasets.length;
+
+    document.getElementById("statUsers").textContent =
+      Object.keys(profile).length > 0 ? 1 : 0;
+  }
+
+  /* CROPS */
+  document.getElementById("cropForm").addEventListener("submit",function(event){
+    event.preventDefault();
+
+    const editId =
+      document.getElementById("cropEditId").value;
+
+    const record = {
+      id:editId || "crop-" + Date.now(),
+      name:document.getElementById("cropName").value.trim(),
+      season:document.getElementById("cropSeason").value,
+      status:document.getElementById("cropStatus").value,
+      note:document.getElementById("cropNote").value.trim()
+    };
+
+    const crops = safeParse(CROP_KEY,[]);
+
+    if(editId){
+      const index =
+        crops.findIndex(function(item){
+          return item.id === editId;
+        });
+
+      if(index >= 0){
+        crops[index] = record;
+      }
+
+      addLog(
+        "Crop updated",
+        record.name + " was updated in the admin crop catalog."
+      );
+    }else{
+      crops.push(record);
+
+      addLog(
+        "Crop added",
+        record.name + " was added to the admin crop catalog."
+      );
+    }
+
+    localStorage.setItem(
+      CROP_KEY,
+      JSON.stringify(crops)
+    );
+
+    resetCropForm();
+    renderCrops();
+    updateOverview();
+
+    showMessage(
+      "cropMessage",
+      "Crop record saved."
+    );
+  });
+
+  function renderCrops(){
+    const crops = safeParse(CROP_KEY,[]);
+    const body = document.getElementById("cropTableBody");
+
+    if(crops.length === 0){
+      body.innerHTML =
+        '<tr><td colspan="5">No crop records available.</td></tr>';
+
+      return;
+    }
+
+    body.innerHTML =
+      crops.map(function(item){
+        const statusClass =
+          item.status === "Active"
+            ? "status-active"
+            : "status-draft";
+
+        return `
+          <tr>
+            <td><strong>${escapeHtml(item.name)}</strong></td>
+            <td>${escapeHtml(item.season)}</td>
+            <td><span class="status-pill ${statusClass}">${escapeHtml(item.status)}</span></td>
+            <td>${escapeHtml(item.note || "—")}</td>
+            <td>
+              <div class="row-actions">
+                <button class="row-button" type="button" onclick="editCrop('${item.id}')">Edit</button>
+                <button class="row-button danger" type="button" onclick="deleteCrop('${item.id}')">Delete</button>
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join("");
+  }
+
+  function editCrop(id){
+    const crops = safeParse(CROP_KEY,[]);
+
+    const crop =
+      crops.find(function(item){
+        return item.id === id;
+      });
+
+    if(!crop){
+      return;
+    }
+
+    document.getElementById("cropEditId").value =
+      crop.id;
+
+    document.getElementById("cropName").value =
+      crop.name;
+
+    document.getElementById("cropSeason").value =
+      crop.season;
+
+    document.getElementById("cropStatus").value =
+      crop.status;
+
+    document.getElementById("cropNote").value =
+      crop.note || "";
+  }
+
+  function deleteCrop(id){
+    const crops = safeParse(CROP_KEY,[]);
+    const target =
+      crops.find(function(item){
+        return item.id === id;
+      });
+
+    const updated =
+      crops.filter(function(item){
+        return item.id !== id;
+      });
+
+    localStorage.setItem(
+      CROP_KEY,
+      JSON.stringify(updated)
+    );
+
+    if(target){
+      addLog(
+        "Crop removed",
+        target.name + " was removed from the admin crop catalog."
+      );
+    }
+
+    renderCrops();
+    updateOverview();
+  }
+
+  function resetCropForm(){
+    document.getElementById("cropForm").reset();
+    document.getElementById("cropEditId").value = "";
+  }
+
+  /* DATASETS */
+  function openDatasetPicker(){
+    document.getElementById("datasetInput").click();
+  }
+
+  function handleDatasetSelection(event){
+    selectedDatasetFile =
+      event.target.files[0] || null;
+
+    const summary =
+      document.getElementById("fileSummary");
+
+    if(!selectedDatasetFile){
+      summary.style.display = "none";
+      return;
+    }
+
+    summary.innerHTML =
+      "<strong>" +
+      escapeHtml(selectedDatasetFile.name) +
+      "</strong><br>" +
+      formatBytes(selectedDatasetFile.size) +
+      " • " +
+      escapeHtml(selectedDatasetFile.type || "Unknown file type");
+
+    summary.style.display =
+      "block";
+  }
+
+  function registerDataset(){
+    if(!selectedDatasetFile){
+      showMessage(
+        "datasetMessage",
+        "Choose a dataset file first."
+      );
+
+      return;
+    }
+
+    const datasets =
+      safeParse(DATASET_KEY,[]);
+
+    const record = {
+      id:"dataset-" + Date.now(),
+      fileName:selectedDatasetFile.name,
+      fileSize:selectedDatasetFile.size,
+      fileType:selectedDatasetFile.type || "",
+      purpose:document.getElementById("datasetPurpose").value,
+      version:document.getElementById("datasetVersion").value.trim() || "Unlabelled",
+      addedAt:new Date().toISOString()
+    };
+
+    datasets.unshift(record);
+
+    localStorage.setItem(
+      DATASET_KEY,
+      JSON.stringify(datasets)
+    );
+
+    addLog(
+      "Dataset registered",
+      record.fileName + " was registered for " + record.purpose + "."
+    );
+
+    selectedDatasetFile = null;
+    document.getElementById("datasetInput").value = "";
+    document.getElementById("fileSummary").style.display = "none";
+    document.getElementById("datasetVersion").value = "";
+
+    renderDatasets();
+    updateOverview();
+
+    showMessage(
+      "datasetMessage",
+      "Dataset metadata registered."
+    );
+  }
+
+  function renderDatasets(){
+    const datasets =
+      safeParse(DATASET_KEY,[]);
+
+    const body =
+      document.getElementById("datasetTableBody");
+
+    if(datasets.length === 0){
+      body.innerHTML =
+        '<tr><td colspan="6">No dataset metadata registered yet.</td></tr>';
+
+      return;
+    }
+
+    body.innerHTML =
+      datasets.map(function(item){
+        return `
+          <tr>
+            <td><strong>${escapeHtml(item.fileName)}</strong></td>
+            <td>${escapeHtml(item.purpose)}</td>
+            <td>${escapeHtml(item.version)}</td>
+            <td>${formatBytes(item.fileSize)}</td>
+            <td>${new Date(item.addedAt).toLocaleString()}</td>
+            <td>
+              <button class="row-button danger" type="button" onclick="deleteDataset('${item.id}')">Remove</button>
+            </td>
+          </tr>
+        `;
+      }).join("");
+  }
+
+  function deleteDataset(id){
+    const datasets =
+      safeParse(DATASET_KEY,[]);
+
+    const target =
+      datasets.find(function(item){
+        return item.id === id;
+      });
+
+    const updated =
+      datasets.filter(function(item){
+        return item.id !== id;
+      });
+
+    localStorage.setItem(
+      DATASET_KEY,
+      JSON.stringify(updated)
+    );
+
+    if(target){
+      addLog(
+        "Dataset removed",
+        target.fileName + " metadata was removed."
+      );
+    }
+
+    renderDatasets();
+    updateOverview();
+  }
+
+  function formatBytes(bytes){
+    const value = Number(bytes || 0);
+
+    if(value < 1024){
+      return value + " B";
+    }
+
+    if(value < 1024 * 1024){
+      return (value / 1024).toFixed(1) + " KB";
+    }
+
+    return (value / (1024 * 1024)).toFixed(1) + " MB";
+  }
+
+  /* USERS */
+  function renderUsers(){
+    const profile =
+      safeParse(PROFILE_KEY,{});
+
+    const history =
+      safeParse(HISTORY_KEY,[]);
+
+    const body =
+      document.getElementById("userTableBody");
+
+    if(Object.keys(profile).length === 0){
+      body.innerHTML =
+        '<tr><td colspan="6">No local demo profile has been created in this browser.</td></tr>';
+
+      return;
+    }
+
+    const name =
+      profile.fullName || profile.name || "HR Fram User";
+
+    const username =
+      profile.username
+        ? "@" + profile.username
+        : "Not set";
+
+    const email =
+      profile.email || "Not set";
+
+    const district =
+      profile.district || "";
+
+    const province =
+      profile.province || "";
+
+    const location =
+      [district,province]
+        .filter(Boolean)
+        .join(", ") || "Not set";
+
+    body.innerHTML = `
+      <tr>
+        <td><strong>${escapeHtml(name)}</strong></td>
+        <td>${escapeHtml(username)}</td>
+        <td>${escapeHtml(email)}</td>
+        <td>${escapeHtml(location)}</td>
+        <td>${history.length}</td>
+        <td><span class="status-pill status-active">Active Demo</span></td>
+      </tr>
+    `;
+  }
+
+  /* LOG */
+  function renderLogs(){
+    const log =
+      safeParse(LOG_KEY,[]);
+
+    const container =
+      document.getElementById("logList");
+
+    if(log.length === 0){
+      container.innerHTML =
+        '<div class="empty-state">No admin activity recorded yet.</div>';
+
+      return;
+    }
+
+    container.innerHTML =
+      log.map(function(item){
+        return `
+          <div class="log-item">
+            <span class="log-dot"></span>
+
+            <div>
+              <strong>${escapeHtml(item.action)}</strong>
+              <p>${escapeHtml(item.detail)}</p>
+            </div>
+
+            <time>${new Date(item.time).toLocaleString()}</time>
+          </div>
+        `;
+      }).join("");
+  }
+
+  function clearAdminLog(){
+    localStorage.removeItem(LOG_KEY);
+    renderLogs();
+  }
+
+  function showMessage(id,text){
+    const element =
+      document.getElementById(id);
+
+    element.textContent =
+      text;
+
+    element.style.display =
+      "block";
+
+    setTimeout(function(){
+      element.style.display =
+        "none";
+    },2500);
+  }
+
+  seedCrops();
+  renderCrops();
+  renderDatasets();
+  renderUsers();
+  renderLogs();
+  updateOverview();
+</script>
+<script>
+function toggleAppMenu(){
+  const nav = document.querySelector(".nav-links");
+  if(nav){ nav.classList.toggle("mobile-open"); }
+}</script></body>
+</html>

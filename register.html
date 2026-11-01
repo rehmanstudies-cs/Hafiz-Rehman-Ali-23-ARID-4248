@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>Create Account — HR Fram</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="auth.css" rel="stylesheet"/>
+</head>
+<body>
+<main class="auth-page">
+<section class="visual-panel">
+<a class="brand" href="index.html" style="color:white">
+<span class="brand-mark">
+<svg aria-hidden="true" fill="none" height="21" viewbox="0 0 24 24" width="21">
+<path d="M12 21V9M12 13C8.5 13 6 11.1 5 8c4.1-.5 7.1.8 8 4.6M12 10c1.1-4 4.2-6.2 8-6-.3 4.2-2.9 7-8 7" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"></path>
+</svg>
+</span>
+        HR Fram
+      </a>
+<div class="visual-content">
+<div class="kicker"><span class="kicker-dot"></span> Pakistan-first smart farming</div>
+<h1>Your farm insights, saved in one place.</h1>
+<p>Create an account so HR Fram can keep your crop recommendations, yield predictions and result history available for future visits.</p>
+<div class="feature-list">
+<div class="feature"><span class="feature-icon">✓</span>Save crop recommendation results</div>
+<div class="feature"><span class="feature-icon">✓</span>Keep yield prediction history</div>
+<div class="feature"><span class="feature-icon">✓</span>Access your results from one account</div>
+</div>
+<div class="mini-dashboard">
+<div class="mini-card">
+<small>Platform tools</small>
+<strong>Crop Recommendation + Yield Prediction</strong>
+</div>
+<div class="mini-card accent">
+<small>Designed for</small>
+<strong>Simple farm decisions</strong>
+</div>
+</div>
+</div>
+<div class="visual-footer">
+        HR Fram — AI Agricultural Decision-Support Platform
+      </div>
+</section>
+<section class="form-area">
+<div class="form-wrap">
+<div class="top-links">
+<a class="back-link" href="index.html">← Back to Home</a>
+<span>Already registered? <a href="login.html">Login</a></span>
+</div>
+<div class="form-card">
+<div class="form-heading">
+<div>
+<h2>Create account</h2>
+<p>Fill in your basic details to start using HR Fram.</p>
+</div>
+<span class="form-badge">FREE ACCOUNT</span>
+</div>
+<form id="registerForm">
+<div class="form-group">
+<label for="fullName">Full name</label>
+<div class="input-wrap">
+<span class="input-icon">
+<svg fill="none" height="18" viewbox="0 0 24 24" width="18">
+<circle cx="12" cy="8" r="4" stroke="currentColor" stroke-width="1.7"></circle>
+<path d="M4 21a8 8 0 0 1 16 0" stroke="currentColor" stroke-width="1.7"></path>
+</svg>
+</span>
+<input class="no-end-icon" id="fullName" placeholder="Your full name" required="" type="text"/>
+</div>
+</div>
+<div class="form-group">
+<label for="registerEmail">Email address</label>
+<div class="input-wrap">
+<span class="input-icon">
+<svg fill="none" height="18" viewbox="0 0 24 24" width="18">
+<path d="M4 6h16v12H4z" stroke="currentColor" stroke-width="1.7"></path>
+<path d="m4 7 8 6 8-6" stroke="currentColor" stroke-width="1.7"></path>
+</svg>
+</span>
+<input class="no-end-icon" id="registerEmail" placeholder="name@example.com" required="" type="email"/>
+</div>
+</div>
+<div class="form-group">
+<label for="registerPassword">Password</label>
+<div class="input-wrap">
+<span class="input-icon">
+<svg fill="none" height="18" viewbox="0 0 24 24" width="18">
+<rect height="10" rx="2" stroke="currentColor" stroke-width="1.7" width="14" x="5" y="10"></rect>
+<path d="M8 10V7a4 4 0 0 1 8 0v3" stroke="currentColor" stroke-width="1.7"></path>
+</svg>
+</span>
+<input id="registerPassword" placeholder="Create a password" required="" type="password"/>
+<button class="password-toggle" onclick="togglePassword('registerPassword', this)" type="button">Show</button>
+</div>
+</div>
+<div class="password-help">
+<span><i></i>Use at least 8 characters</span>
+<span><i></i>Include letters and numbers</span>
+</div>
+<div class="form-group">
+<label for="confirmPassword">Confirm password</label>
+<div class="input-wrap">
+<span class="input-icon">
+<svg fill="none" height="18" viewbox="0 0 24 24" width="18">
+<rect height="10" rx="2" stroke="currentColor" stroke-width="1.7" width="14" x="5" y="10"></rect>
+<path d="M8 10V7a4 4 0 0 1 8 0v3" stroke="currentColor" stroke-width="1.7"></path>
+</svg>
+</span>
+<input id="confirmPassword" placeholder="Re-enter your password" required="" type="password"/>
+<button class="password-toggle" onclick="togglePassword('confirmPassword', this)" type="button">Show</button>
+</div>
+</div>
+<button class="primary-button" type="submit">Create HR Fram Account</button>
+<div class="auth-message" id="registerMessage"></div></form>
+<p class="switch-text">
+        Already have an account?
+        <a href="login.html">Login</a>
+</p>
+<div class="security-note">
+<svg fill="none" height="17" viewbox="0 0 24 24" width="17">
+<circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.7"></circle>
+<path d="M12 10v6M12 7h.01" stroke="currentColor" stroke-linecap="round" stroke-width="1.9"></path>
+</svg>
+<span>This page is the interface only. Registration data will be stored when the database and backend are connected.</span>
+</div>
+</div>
+</div>
+</section>
+</main>
+
+
+<script src="auth.js"></script><script>
+function togglePassword(id,button){
+  const input = document.getElementById(id);
+  const show = input.type === "password";
+  input.type = show ? "text" : "password";
+  button.textContent = show ? "Hide" : "Show";
+}
+
+function validPassword(password){
+  return password.length >= 8 && /[A-Za-z]/.test(password) && /\d/.test(password);
+}
+
+document.getElementById("registerForm").addEventListener("submit",function(event){
+  event.preventDefault();
+
+  const fullName = document.getElementById("fullName").value.trim();
+  const email = document.getElementById("registerEmail").value.trim();
+  const password = document.getElementById("registerPassword").value;
+  const confirm = document.getElementById("confirmPassword").value;
+  const message = document.getElementById("registerMessage");
+
+  if(!validPassword(password)){
+    message.className = "auth-message error";
+    message.textContent = "Use at least 8 characters and include at least one letter and one number.";
+    message.style.display = "block";
+    return;
+  }
+
+  if(password !== confirm){
+    message.className = "auth-message error";
+    message.textContent = "The two passwords do not match.";
+    message.style.display = "block";
+    return;
+  }
+
+  const result = HRFramAuth.registerAccount(fullName,email,password);
+
+  if(!result.ok){
+    message.className = "auth-message error";
+    message.textContent = result.error;
+    message.style.display = "block";
+    return;
+  }
+
+  HRFramAuth.setSession(result.account);
+
+  localStorage.setItem("hrFramProfile",JSON.stringify({
+    fullName:result.account.fullName,
+    username:result.account.username,
+    email:result.account.email,
+    phone:"",
+    province:"",
+    district:"",
+    farmArea:"",
+    areaUnit:"Acres",
+    photo:""
+  }));
+
+  message.className = "auth-message";
+  message.textContent = "Account created. Opening Dashboard...";
+  message.style.display = "block";
+
+  setTimeout(function(){
+    window.location.href = "dashboard.html";
+  },250);
+});</script></body>
+</html>

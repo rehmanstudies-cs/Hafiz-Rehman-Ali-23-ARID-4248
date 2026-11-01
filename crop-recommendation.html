@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>Crop Recommendation — HR Fram</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="app.css" rel="stylesheet"/>
+</head>
+<body>
+<header class="site-header"><div class="container nav"><a class="brand" href="index.html"><span class="brand-mark">H</span>HR Fram</a><nav class="nav-links"><a href="index.html">Home</a><a class="active" href="crop-recommendation.html">Crop Recommendation</a><a href="yield-prediction.html">Yield Prediction</a><a href="about-us.html">About Us</a><a href="history.html">History</a><a data-auth-user="" href="dashboard.html" style="display:none">Dashboard</a><a data-auth-admin="" href="admin.html" style="display:none">Admin Panel</a><a href="help.html">Help</a></nav><div class="nav-actions"><a class="btn btn-secondary" data-auth-guest="" href="login.html">Login</a><a class="btn btn-primary" data-auth-guest="" href="register.html">Get Started</a><button class="btn btn-secondary" data-auth-user="" onclick="HRFramAuth.logout()" style="display:none" type="button">Logout</button><button aria-label="Open menu" class="menu-btn" onclick="toggleAppMenu()" type="button">☰</button></div></div></header>
+<section class="page-intro">
+<div class="container">
+<div class="eyebrow"><span class="dot"></span> Crop Recommendation</div>
+<h1>Find crops better suited to your farm conditions.</h1>
+<p>
+      Select your location and season, choose automatic or manual weather, then add soil information when available.
+      The result appears on this page and can also be saved, shared, printed, or opened as a detailed report.
+    </p>
+</div>
+</section>
+<main class="container page-grid">
+<section class="panel form-panel">
+<div class="section-title">
+<div>
+<h2>Farm information</h2>
+<p>Keep the form simple: location, season, weather and optional soil values.</p>
+</div>
+<span class="step-badge">RECOMMENDATION FORM</span>
+</div>
+<form id="recommendationForm">
+<div class="form-section">
+<h3>1. Location &amp; season</h3>
+<div class="form-grid">
+<div class="form-group">
+<label for="province">Province</label>
+<select id="province" required="">
+<option value="">Select province</option>
+<option>Punjab</option>
+<option>Sindh</option>
+<option>Khyber Pakhtunkhwa</option>
+<option>Balochistan</option>
+<option>Islamabad Capital Territory</option>
+<option>Gilgit-Baltistan</option>
+<option>Azad Jammu &amp; Kashmir</option>
+</select>
+</div>
+<div class="form-group">
+<label for="district">District / city</label>
+<input id="district" list="districtSuggestions" placeholder="Example: Sahiwal" required="" type="text"/>
+<datalist id="districtSuggestions">
+<option value="Sahiwal"><option value="Lahore"><option value="Faisalabad">
+<option value="Multan"><option value="Bahawalpur"><option value="Rawalpindi">
+<option value="Gujranwala"><option value="Sargodha"><option value="Okara">
+<option value="Karachi"><option value="Hyderabad"><option value="Sukkur">
+<option value="Larkana"><option value="Mirpur Khas"><option value="Thatta">
+<option value="Peshawar"><option value="Mardan"><option value="Swat">
+<option value="Abbottabad"><option value="Dera Ismail Khan">
+<option value="Quetta"><option value="Khuzdar"><option value="Gwadar">
+<option value="Turbat"><option value="Islamabad"><option value="Gilgit">
+<option value="Skardu"><option value="Muzaffarabad"><option value="Mirpur">
+</option></option></option></option></option></option></option></option></option></option></option></option></option></option></option></option></option></option></option></option></option></option></option></option></option></option></option></option></option></datalist>
+<span class="field-note">You can type another Pakistan location if it is not shown in the suggestions.</span>
+</div>
+<div class="form-group">
+<label for="season">Season</label>
+<select id="season" required="">
+<option value="">Select season</option>
+<option>Rabi</option>
+<option>Kharif</option>
+</select>
+</div>
+<div class="form-group">
+<label for="area">Farm area (acres)</label>
+<input id="area" min="0" placeholder="Example: 5" step="0.1" type="number"/>
+</div>
+<div class="form-group">
+<label for="plannedSowingDate">Planned sowing / planting date</label>
+<input id="plannedSowingDate" type="date"/>
+<span class="field-note">
+              Optional here. It will transfer automatically if you continue to Yield Prediction.
+            </span>
+</div>
+</div>
+</div>
+<div class="form-section">
+<h3>2. Weather information</h3>
+<div class="weather-box">
+<div class="weather-mode">
+<button class="mode-button active" id="autoModeButton" onclick="setWeatherMode('auto')" type="button">
+              Automatic Weather
+            </button>
+<button class="mode-button" id="manualModeButton" onclick="setWeatherMode('manual')" type="button">
+              Enter Manually
+            </button>
+</div>
+<div class="weather-status">
+<div>
+<strong id="weatherStatusTitle">Automatic mode selected</strong><br/>
+<span id="weatherStatusText">Choose a province and district, then fetch weather.</span>
+</div>
+<span id="weatherSource">Open-Meteo</span>
+</div>
+<div class="form-grid">
+<div class="form-group">
+<label for="temperature">Temperature (°C)</label>
+<input id="temperature" placeholder="Automatic" readonly="" step="0.1" type="number"/>
+</div>
+<div class="form-group">
+<label for="humidity">Humidity (%)</label>
+<input id="humidity" max="100" min="0" placeholder="Automatic" readonly="" step="0.1" type="number"/>
+</div>
+<div class="form-group full">
+<label for="rainfall">Rainfall / precipitation (mm)</label>
+<input id="rainfall" min="0" placeholder="Automatic" readonly="" step="0.1" type="number"/>
+<span class="field-note">
+                Auto mode currently uses today's precipitation total from the weather service. Before final model training,
+                we will match this period to the rainfall definition used by the training dataset.
+              </span>
+</div>
+</div>
+<div class="weather-controls" id="autoWeatherControls">
+<button class="small-button" onclick="fetchAutomaticWeather()" type="button">Fetch / Refresh Weather</button>
+</div>
+</div>
+</div>
+<div class="form-section">
+<h3>3. Soil information (optional)</h3>
+<div class="soil-grid">
+<div class="form-group">
+<label for="nitrogen">Nitrogen (N)</label>
+<input id="nitrogen" min="0" placeholder="N" type="number"/>
+</div>
+<div class="form-group">
+<label for="phosphorus">Phosphorus (P)</label>
+<input id="phosphorus" min="0" placeholder="P" type="number"/>
+</div>
+<div class="form-group">
+<label for="potassium">Potassium (K)</label>
+<input id="potassium" min="0" placeholder="K" type="number"/>
+</div>
+<div class="form-group">
+<label for="ph">Soil pH</label>
+<input id="ph" max="14" min="0" placeholder="pH" step="0.1" type="number"/>
+</div>
+</div>
+<span class="field-note">
+          Soil values can be added when a test is available. The final model will determine how missing values are handled.
+        </span>
+</div>
+<div class="action-row">
+<button class="btn btn-primary" type="submit">Generate Recommendation</button>
+<button class="btn btn-secondary" onclick="resetPageResult()" type="reset">Clear Form</button>
+</div>
+</form>
+<section class="result-section" id="resultSection">
+<div class="result-heading">
+<div>
+<span class="result-label">DEMO AI RESULT</span>
+<h2>Recommended crops</h2>
+<p>The quick result stays on this page. A full result report can open separately.</p>
+</div>
+<div class="result-location" id="resultLocation">Pakistan</div>
+</div>
+<div class="result-grid" id="resultGrid"></div>
+<div class="result-summary">
+<strong>Recommendation summary</strong>
+<p id="resultSummary"></p>
+</div>
+<div class="result-actions">
+<button class="btn btn-primary" onclick="saveToHistory()" type="button">Save to History</button>
+<button class="btn btn-secondary" onclick="openDetails()" type="button">View Details</button>
+<button class="btn btn-secondary" onclick="prepareShareLink()" type="button">Share Result</button>
+<button class="btn btn-soft" onclick="printReport()" type="button">Print Report</button>
+<button class="btn continue-yield" onclick="continueToYield()" type="button">Predict Yield for Best Match</button>
+</div>
+<div class="action-message" id="actionMessage"></div>
+<div class="share-box" id="shareBox">
+<label for="shareLink">Shareable result URL</label>
+<input id="shareLink" readonly="" type="text"/>
+<span class="field-note">
+          While testing locally, this link points to your computer. Once the website is hosted, the same feature becomes a real shareable web URL.
+        </span>
+</div>
+<div class="result-note">
+        Recommendation crops and suitability scores are demo values only. They will later be replaced by the trained model output.
+      </div>
+</section>
+</section>
+<aside class="panel side-panel">
+<div class="side-block">
+<h3>Recommended user flow</h3>
+<div class="tip-list">
+<div class="tip"><span class="tip-icon">1</span><span>Select province, district and season.</span></div>
+<div class="tip"><span class="tip-icon">2</span><span>Use automatic weather or switch to manual entry.</span></div>
+<div class="tip"><span class="tip-icon">3</span><span>Add soil values when available.</span></div>
+<div class="tip"><span class="tip-icon">4</span><span>Generate, save, share or print the result.</span></div>
+</div>
+</div>
+<div class="side-block">
+<div class="info-card">
+<strong>Result structure is now fixed</strong>
+<p>
+          The quick result appears here. Saved results go to History, while View Details opens the same record on a dedicated report page.
+        </p>
+</div>
+</div>
+</aside>
+</main>
+<footer><div class="container footer-row"><span>© 2026 HR Fram. All Rights Reserved.</span><span>AI Agricultural Decision-Support Platform • <a href="help.html">Help</a> • <a href="privacy.html">Privacy</a> • <a href="terms.html">Terms</a></span></div></footer>
+<script>
+  let weatherMode = "auto";
+  let currentResult = null;
+
+  const form = document.getElementById("recommendationForm");
+  const resultSection = document.getElementById("resultSection");
+  const resultGrid = document.getElementById("resultGrid");
+  const resultLocation = document.getElementById("resultLocation");
+  const resultSummary = document.getElementById("resultSummary");
+  const actionMessage = document.getElementById("actionMessage");
+  const shareBox = document.getElementById("shareBox");
+  const shareLink = document.getElementById("shareLink");
+
+  function setWeatherMode(mode){
+    weatherMode = mode;
+
+    const autoButton = document.getElementById("autoModeButton");
+    const manualButton = document.getElementById("manualModeButton");
+    const controls = document.getElementById("autoWeatherControls");
+
+    const temperature = document.getElementById("temperature");
+    const humidity = document.getElementById("humidity");
+    const rainfall = document.getElementById("rainfall");
+
+    if(mode === "auto"){
+      autoButton.classList.add("active");
+      manualButton.classList.remove("active");
+
+      temperature.readOnly = true;
+      humidity.readOnly = true;
+      rainfall.readOnly = true;
+
+      temperature.placeholder = "Automatic";
+      humidity.placeholder = "Automatic";
+      rainfall.placeholder = "Automatic";
+
+      controls.style.display = "flex";
+      setWeatherStatus("Automatic mode selected", "Choose a province and district, then fetch weather.", "");
+    }else{
+      manualButton.classList.add("active");
+      autoButton.classList.remove("active");
+
+      temperature.readOnly = false;
+      humidity.readOnly = false;
+      rainfall.readOnly = false;
+
+      temperature.placeholder = "Example: 24";
+      humidity.placeholder = "Example: 61";
+      rainfall.placeholder = "Example: 95";
+
+      controls.style.display = "none";
+      setWeatherStatus("Manual mode selected", "Enter the weather values yourself.", "");
+    }
+  }
+
+  function setWeatherStatus(title, text, className){
+    const titleElement = document.getElementById("weatherStatusTitle");
+    const textElement = document.getElementById("weatherStatusText");
+
+    titleElement.textContent = title;
+    textElement.textContent = text;
+    textElement.className = className || "";
+  }
+
+  async function fetchAutomaticWeather(){
+    const province = document.getElementById("province").value.trim();
+    const district = document.getElementById("district").value.trim();
+
+    if(!province || !district){
+      setWeatherStatus("Location needed", "Select a province and enter a district first.", "status-error");
+      return;
+    }
+
+    setWeatherStatus("Finding location...", "Searching Pakistan location data.", "");
+
+    try{
+      const searchName = encodeURIComponent(district);
+      const geocodeUrl =
+        "https://geocoding-api.open-meteo.com/v1/search?name=" +
+        searchName +
+        "&count=10&language=en&format=json&countryCode=PK";
+
+      const geocodeResponse = await fetch(geocodeUrl);
+
+      if(!geocodeResponse.ok){
+        throw new Error("Location service error");
+      }
+
+      const geocodeData = await geocodeResponse.json();
+
+      if(!geocodeData.results || geocodeData.results.length === 0){
+        throw new Error("Location not found");
+      }
+
+      let place = geocodeData.results[0];
+
+      const provinceLower = province.toLowerCase();
+      const closerMatch = geocodeData.results.find(function(item){
+        const admin = (item.admin1 || "").toLowerCase();
+        return admin.includes(provinceLower) || provinceLower.includes(admin);
+      });
+
+      if(closerMatch){
+        place = closerMatch;
+      }
+
+      setWeatherStatus("Location found", place.name + ", " + (place.admin1 || province), "status-ok");
+
+      const weatherUrl =
+        "https://api.open-meteo.com/v1/forecast" +
+        "?latitude=" + place.latitude +
+        "&longitude=" + place.longitude +
+        "&current=temperature_2m,relative_humidity_2m" +
+        "&daily=precipitation_sum" +
+        "&forecast_days=1" +
+        "&timezone=auto";
+
+      const weatherResponse = await fetch(weatherUrl);
+
+      if(!weatherResponse.ok){
+        throw new Error("Weather service error");
+      }
+
+      const weatherData = await weatherResponse.json();
+
+      document.getElementById("temperature").value =
+        weatherData.current.temperature_2m ?? "";
+
+      document.getElementById("humidity").value =
+        weatherData.current.relative_humidity_2m ?? "";
+
+      document.getElementById("rainfall").value =
+        weatherData.daily.precipitation_sum[0] ?? "";
+
+      setWeatherStatus(
+        "Weather loaded",
+        "Live weather data loaded for " + place.name + ".",
+        "status-ok"
+      );
+
+    }catch(error){
+      setWeatherStatus(
+        "Automatic weather unavailable",
+        "Try the location again or switch to manual weather entry.",
+        "status-error"
+      );
+    }
+  }
+
+  function getDemoCrops(season){
+    if(season === "Kharif"){
+      return [
+        {name:"Maize", score:91, reason:"Strong seasonal fit for the selected demo conditions."},
+        {name:"Cotton", score:84, reason:"A suitable warm-season alternative in this demo."},
+        {name:"Rice", score:78, reason:"Possible where rainfall and water availability are suitable."}
+      ];
+    }
+
+    return [
+      {name:"Wheat", score:92, reason:"Strong demo match for the selected Rabi conditions."},
+      {name:"Mustard", score:85, reason:"A suitable cool-season alternative in this demo."},
+      {name:"Barley", score:79, reason:"Another possible option under similar seasonal conditions."}
+    ];
+  }
+
+  function createResultCard(crop, index){
+    const label = index === 0 ? "Best match" : "Alternative " + index;
+
+    return `
+      <article class="crop-result-card ${index === 0 ? "best-match" : ""}">
+        <div class="crop-result-top">
+          <div>
+            <span class="crop-rank">${label}</span>
+            <h3>${crop.name}</h3>
+          </div>
+
+          <div class="score-circle">${crop.score}%</div>
+        </div>
+
+        <div class="score-bar">
+          <span style="width:${crop.score}%"></span>
+        </div>
+
+        <p>${crop.reason}</p>
+
+        <div class="crop-meta">
+          <span>Suitability score</span>
+          <strong>${crop.score}%</strong>
+        </div>
+      </article>
+    `;
+  }
+
+  function buildCurrentResult(){
+    const province = document.getElementById("province").value;
+    const district = document.getElementById("district").value;
+    const season = document.getElementById("season").value;
+    const crops = getDemoCrops(season);
+
+    return {
+      id: "rec-" + Date.now(),
+      type: "Crop Recommendation",
+      createdAt: new Date().toISOString(),
+      location: {
+        province: province,
+        district: district
+      },
+      season: season,
+      area: document.getElementById("area").value || "",
+      plannedSowingDate: document.getElementById("plannedSowingDate").value || "",
+      weatherMode: weatherMode,
+      weather: {
+        temperature: document.getElementById("temperature").value || "",
+        humidity: document.getElementById("humidity").value || "",
+        rainfall: document.getElementById("rainfall").value || ""
+      },
+      soil: {
+        nitrogen: document.getElementById("nitrogen").value || "",
+        phosphorus: document.getElementById("phosphorus").value || "",
+        potassium: document.getElementById("potassium").value || "",
+        ph: document.getElementById("ph").value || ""
+      },
+      recommendations: crops,
+      summary:
+        crops[0].name +
+        " appears as the strongest demo recommendation for the selected " +
+        season +
+        " conditions."
+    };
+  }
+
+  form.addEventListener("submit", async function(event){
+    event.preventDefault();
+
+    if(weatherMode === "auto"){
+      const temperature = document.getElementById("temperature").value;
+      const humidity = document.getElementById("humidity").value;
+
+      if(!temperature || !humidity){
+        await fetchAutomaticWeather();
+      }
+    }
+
+    currentResult = buildCurrentResult();
+
+    resultGrid.innerHTML = currentResult.recommendations
+      .map((crop, index) => createResultCard(crop, index))
+      .join("");
+
+    resultLocation.textContent =
+      currentResult.location.district + ", " + currentResult.location.province;
+
+    resultSummary.textContent =
+      currentResult.summary +
+      " The final system will replace these demo rankings with the trained model output.";
+
+    resultSection.style.display = "block";
+    actionMessage.style.display = "none";
+    shareBox.style.display = "none";
+
+    resultSection.scrollIntoView({behavior:"smooth", block:"start"});
+  });
+
+  function resetPageResult(){
+    resultSection.style.display = "none";
+    currentResult = null;
+    setTimeout(function(){ setWeatherMode("auto"); }, 0);
+  }
+
+  function saveToHistory(){
+    if(!currentResult) return;
+
+    const history = JSON.parse(localStorage.getItem("hrFramHistory") || "[]");
+
+    const alreadySaved = history.some(function(item){
+      return item.id === currentResult.id;
+    });
+
+    if(!alreadySaved){
+      history.unshift(currentResult);
+      localStorage.setItem("hrFramHistory", JSON.stringify(history));
+    }
+
+    showActionMessage("Result saved to History.");
+  }
+
+  function detailUrl(record, useData){
+    const baseUrl = new URL("result-detail.html", window.location.href);
+
+    if(useData){
+      baseUrl.searchParams.set("data", JSON.stringify(record));
+    }else{
+      baseUrl.searchParams.set("id", record.id);
+    }
+
+    return baseUrl.toString();
+  }
+
+  function openDetails(){
+    if(!currentResult) return;
+
+    saveToHistory();
+    window.location.href = detailUrl(currentResult, false);
+  }
+
+  async function prepareShareLink(){
+    if(!currentResult) return;
+
+    const url = detailUrl(currentResult, true);
+
+    shareLink.value = url;
+    shareBox.style.display = "block";
+
+    try{
+      await navigator.clipboard.writeText(url);
+      showActionMessage("Share link copied. It is also shown below.");
+    }catch(error){
+      showActionMessage("Share link is ready below. Copy it manually.");
+    }
+
+    shareLink.select();
+  }
+
+  function printReport(){
+    if(!currentResult) return;
+
+    const url = new URL(detailUrl(currentResult, true));
+    url.searchParams.set("print", "1");
+
+    window.open(url.toString(), "_blank");
+  }
+
+
+  function continueToYield(){
+    if(!currentResult) return;
+
+    /*
+      Keep the recommendation data temporarily so the yield page
+      can reuse it without asking the user to type everything again.
+    */
+    localStorage.setItem(
+      "hrFramYieldPrefill",
+      JSON.stringify(currentResult)
+    );
+
+    window.location.href =
+      "yield-prediction.html?source=recommendation";
+  }
+
+  function showActionMessage(text){
+    actionMessage.textContent = text;
+    actionMessage.style.display = "block";
+  }
+
+  document.getElementById("district").addEventListener("change", function(){
+    if(weatherMode === "auto"){
+      fetchAutomaticWeather();
+    }
+  });
+</script>
+<script>
+function toggleAppMenu(){
+  const nav = document.querySelector(".nav-links");
+  if(nav){ nav.classList.toggle("mobile-open"); }
+}
+</script>
+<script src="auth.js"></script></body>
+</html>
